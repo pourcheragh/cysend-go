@@ -1,0 +1,3382 @@
+openapi: 3.0.3
+info:
+  contact:
+    name: CY.SEND Support
+    url: https://www.cysend.com
+  description: |
+    # 1 Table of content
+    1. Table of content
+    2. Overview
+    3. Changelog
+    4. Definitions
+    5. API Structure
+    6. Technical requirements
+    7. Read before you start coding
+    8. Integration is done, how do we go live?
+    9. Security
+    10. HTTP Status Codes
+    11. About us
+    # 2 Overview
+    The cysend.com API is a gateway to buy all the products we carry.<br />
+    The cysend.com API is built following the OpenAPI standards.<br />
+    [read more](https://www.openapis.org/)
+    ## 2.1 Audience
+    This document contains the technical interconnection specifications. It is designed to be read by the CUSTOMER’s technical team in charge of the integration.
+    ## 2.2 Uses
+    The cysend.com API can be interfaced with different kinds of devices &
+    hosts, such as:
+    1. Mobile phones
+    2. Terminals
+    3. CUSTOMER web sites
+    4. Automated points of sales
+    5. Automated teller machines
+    6. White label websites
+    7. White label applications
+    8. Custom applications & hardware
+    # 3 Changelog
+    Date | Version | Changes | Author
+    ----------- | ----------- | ----------- | -----------
+    2023-12-11 | 5.2.3 | <ul>Added parameters to receive PIN usage instructions in catalog and the possibility to filter the returned languages.<li>Added `return_usage_instruction` parameter in GET `/store/catalogue` and GET `/store/catalogue/products` operations.</li><li>Added `languages` parameter in GET `/store/catalogue` and GET `/store/catalogue/products` operations.</li><li>Added `usage_instructions` parameter to the `Product` schema. This parameter is optional and is only returned if new parameter `return_usage_instruction` is set to true.</li></ul> | CY.SEND OpenApi team
+    2022-11-05 | 5.2.2 | <ul><li>New operation `/store/order/cost`</li><br />This operation returns an indicative cost of a face value. It does not place a purchase order. It is only a calculation tool to know the cost of a face value before placing the final purchase order. It returns the current cost at the exact time of the operation.</ul> | CY.SEND OpenApi team
+    2022-09-08 | 5.2.1 | <ul><li>Added `country_zone` parameter to the `Product` schema<br />Returns an indication of the geographical zone in which the product can be used.</li></ul> | CY.SEND OpenApi team
+    2020-03-06 | 5.2.0 | <ul><li>Added mobile to catalogue operations `/store/catalogue/products` and `/store/catalogue/face-value`.<br />This filter will detect the operator and return the available product/face values.<br />The service has a cost and is billed on usage</li><li>Added notification operations. See Notification operation group and definitions (Chapter 4.13).</li><li>Added `notification` parameter in `/store/order` POST request.</li></ul> | CY.SEND OpenApi team
+    2019-10-08 | 5.1.3 | <ul><li>Added `product_description` parameter in catalogue.</li></ul> | CY.SEND OpenApi team
+    2019-05-24 | 5.1.2 | <ul><li>Added product types (`instant` and `prepaid_code`) to the `Product` schema</li><li>Added new definition to chapter 4: Product types</li><li>Renamed `PIN` schema to `PrepaidCode`</li><li>Added multi languages prepaid code usage instructions to the `PrepaidCode` schema</li><li>Renamed `Coverage` schema to `Catalogue`</li><li>Renamed `gift_card_pin_code` parameter to `gift_card_code` in `CY.SEND Gift Card` operations</li></ul> | CY.SEND OpenApi team
+    2019-05-14 | 5.1.1 | <ul><li>Added support for promotions in `Catalogue` operations</li><li>Renamed `Catalogue` schema parameter `maintenance` to `maintenances`</li><li>Added purchase `date` parameter in `OrderStatus` schema</li><li>Renamed `pin-code` parameter to `gift_card_pin_code` in `CY.SEND Gift Card` operations</li></ul> | CY.SEND OpenApi team
+    2019-03-19 | 5.1.0 | <ul><li>Public early access</li></ul> | CY.SEND OpenApi team
+
+    # 4 Definitions
+    ## 4.1 API Credentials
+    API credentials are different from cysend.com credentials. Please ask the support team for your credentials.
+    ## 4.2 HTTP Basic access authentication
+    In the context of an HTTP transaction, basic access authentication is a
+    method for an HTTP user agent to provide a user name and password when
+    making a request. For security reason, this authentication method should
+    only be used on HTTPS request.
+    [Wikipedia](https://en.wikipedia.org/wiki/Basic_access_authentication)
+    ## 4.3 HTTP request methods
+    HTTP defines methods (sometimes referred to as "verbs") to indicate the
+    desired action to be performed on the identified resource.
+    ## 4.4 HTTP status code
+    Status codes are issued by a server in response to a client's request made
+    to the server. It includes codes from IETF Request for Comments (RFCs),
+    other specifications, and some additional codes used in some common
+    applications of the Hypertext Transfer Protocol (HTTP). The first digit of
+    the status code specifies one of five standard classes of responses. The
+    message phrases shown are typical, but any human-readable alternative may be
+    provided. Unless otherwise stated, the status code is part of the HTTP/1.1
+    standard (RFC 7231).
+    ## 4.5 Callback URL
+    Call back URL is an option to automatically inform CUSTOMER when a status
+    change occurs for a purchase order. The callback URL is a great option to
+    automatically track any status change to a purchase order. It is advised to implement it.
+    ## 4.6 First Level Support
+    It is the initial support service provided by CUSTOMER to its clients. It
+    requires knowledge of products, terms and conditions offered by CY.TALK
+    rather than technical information.
+    ## 4.7 Second Level Support
+    It is more in-depth technical support service provided by CY.TALK for
+    CUSTOMER support rather than direct CUSTOMER's client support.
+    ## 4.8 CUSTOMER
+    The CUSTOMER is a registered CY.SEND user.
+    ## 4.9 Products
+    It is the service delivered to the CUSTOMER’s client. Each product has a Face value and a currency. They can be in fixed values or in ranges. The products are divided into categories
+    ## 4.10 Product types
+    * Instant product: is a type of product where the purchased top up amount will be credited instantly and directly to the beneficiary’s balance. Example: for a mobile top up where the top up is instantly credited to the beneficiary’s balance, or to top up an utility account where the amount directly credits the beneficiary’s balance.
+    * Prepaid code: is a type of product delivered to the beneficiary as a prepaid code with usage instructions. It is a series of number or letters or both that is loaded with a prepaid amount. To redeem the prepaid code, the beneficiary has to follow the sent usage instructions. Example: to visit the website of the issuing company and follow the shown instructions, or to send a USSD code in case of a mobile operator prepaid. Each prepaid code has a serial number ( digits) that is used to help identify the prepaid code. The serial number cannot be redeemed. Prepaid codes usually have an expiration date.
+    ## 4.11 Order
+    It's CUSTOMER's purchase order, in which CUSTOMER will add products and place the purchase. For now it is limited to 1 product per order (later will be increased).
+    ## 4.12 Product issuer purchase reference number
+    It is a number provide by some product issuers that can be used by the beneficiary for his customer care enquiries when contacting the product issuer.
+    ## 4.13 Notifications
+    Use notification to be proactively informed of event that happened based on the rules you have set to be sent using the notification channel that suits you. Example: to retrieve your balance or to know the status change of a purchase.  We recommend you set notifications to keep track at all times of the status of your business.
+    <br /><br />
+    There are two ways you can use the notifications:
+    * The ones you can subscribe for a resource catalogue.
+    * The ones for specific resource.
+    ### 4.13.1 Resource
+    A resource is an object within a resource type. Such as: a promotion, a maintenance, balance, a purchase, a price lists, a news, credentials, a gift cards, security and a sale.
+    ### 4.13.2 Resource type
+    Each resource type is a homogeneous group that contains only one type of resource. You can subscribe to a resources type.
+    <br />Example of resource types are: Promotions, Maintenances, Balances, Purchases, Price lists, News, Credentials, Gift Cards, Security and Sales
+    ### 4.13.3 Event
+    It is an occurrence that happens that leads to set a trigger off such as:
+    * A balance was debited
+    * A transaction was successful
+    * Start of a promotion
+    ### 4.13.4 Trigger
+    A mechanism that initiates an action when an event occurs or upon receiving some type of input such as:
+    * A low balance threshold
+    * A change in top up status
+    ### 4.13.7 Channel
+    A channel is the means that will be used to convey the notifications. Optionally CUSTOMER can create channels to send notifications in white label; I.E.: using his own email, firebase, Mattermost server, or own SMS sender name.
+    ### 4.13.6 Channel type
+    It is the transport medium that will be used to send the notifications:
+    * Email
+    * SMS
+    * HTTP
+    * Firebase
+    * Phone call
+    * XMPP
+    * Mattermost
+    ### 4.13.8 Template
+    It is the content of notifications. Each channel has his is own set of templates which are specific per channel type and per trigger. Templates are built using a pseudo language that allow the usage of variables describing the notification resource and trigger.
+    ### 4.13.9 Subscription
+    CUSTOMERS can subscribe to an event by resource type or by resource, you will be notified each time the event you subscribed to sets off a trigger.
+    <br />I.E.: a CUSTOMER can subscribe to a purchase result notification by email for every purchase made from his account (it’s the default subscription for all new CY.SEND CUSTOMERS).
+    <br />Or subscribe to a specific purchase result notification by HTTP for a single purchase using the  CY.SEND OpenAPI POST [/store/order](#/Store/createOrder) operation.
+    ### 4.13.10 Destination
+    It is to where the notification will be sent. For each notification subscription, the CUSTOMER should specify the destination and the parameters that are required by the Channel Type.
+    <br />I.E.: Email channels required `to_emails` parameter and have 2 optional parameters that are `cc_emails` and `bcc_emails`.
+    <br />HTTP channels only require an `url` parameter.
+    ## 4.14 Purchase Scenarios
+    The CY.SEND OpenAPI use scenarios so you can test your API implementations. There are 2 scenarios: LIVE and SIMULATION.
+    ### 4.14.1 Live purchase scenario
+    Will buy top up and DEBIT your CY.SEND account balance.
+    ### 4.14.2 Simulate purchase scenario
+    Will do a simulation of a top up, your CY.SEND balance will NOT be debited.
+    ## 4.15 API credentials
+    You will need them to use the CY.SEND OpenAPI, they are found in your profile in the Developer section. You can have as many credentials as you need for each of your use cases, passwords are shown only one time (make sure you save them).
+    # 5 API Structure
+    ## 5.1 Scopes
+    The API is separated in multiple scopes that correspond to CY.SEND
+    resources. A scope is always the first part (before the second slash) of an
+    operation path. For example, the operation to retrieve catalogue countries
+    has the path [/store/catalogue/countries](#/Store/getCountries). The scope of this operation is
+    `Store`.
+    ## 5.2 Methods
+    Every scope has defined HTTP request methods.
+    ## 5.3 Operation
+    An operation is defined by a relative URL (containing the scope) and a
+    method.
+    ## 5.4 CUSTOMER rights
+    CUSTOMER's credentials have access to some scope and methods. If the API
+    detect an unauthorized access, it will return an 403 HTTP status code.
+    ## 5.5 Authentication
+    Every operation can have one or more authentication mechanisms. Only one
+    mechanism must be used per request.
+    ### 5.5.1 HTTP basic access authentication
+    HTTP basic access authentication uses API credentials to authenticate the
+    CUSTOMER. For security reason, this authentication mechanism must always be
+    used over SSL request.
+    ### 5.5.2 Access (Impersonation) token
+    The `access` scope allows the CUSTOMER to generate and manage tokens in order
+    to allow a third party (point of sale, application, partner, ...) to use
+    CY.SEND API on his behalf without knowing his API credentials. The token
+    usage can be restricted by source IP, time and accessible operations. Please
+    see POST [/access/token](#/Access/createAccessToken) operation for more information.
+    # 6 Technical requirements
+    Representational State Transfer architecture, Knowledge of HTTP requests and
+    JSON.
+    ## 6.1 Technologies used
+    * HTTP request
+    * JSON for query results
+    # 7 Read before you start coding, this is the part you really should read before starting!
+    As we are developing our API and catalogue constantly, we suggest that you use the below logic for your integration since more products and features will be added based on this logic.
+    <br />We optimize so you will not need to rewrite your code.
+    1. Create a customer account on www.cysend.com.
+    2. Activate as many OpenAPI credentials as you need from the developer section in your profile. The password will be shown only one time, make sure you save it.
+    <br />Note: You must never send this password in clear text over the internet. This includes public chats such as Skype, WhatsApp, email…. We are not responsible if you share your password in the open.
+    3. Pull the CY.SEND catalogue to build your own catalogue by:
+        1. Use the /store/catalogue operation to build your database.
+        <br />This will return:
+            1. All countries where CY.SEND has products.
+            2. All product categories
+            3. All products name
+            4. All products face values and currencies
+            5. All products price
+        2.  Create a database with all of the above – You should update it once a day after 11:00 (GMT +1) to keep the prices and products current, else you might have error when doing purchases.
+        <br />NOTE: The face value ID are changed each time the value changes but they are NOT changed when the cost changes. This is valid for ranges and fixed values.
+        3. Create your retail sales price list
+        4. Set a callback to receive top up status update
+    4. Testing purchases
+    <br />The OpenAPI can send simulations and real top ups. The simulation scenario will function exactly as a real top up but it will not debit your CY.SEND balance. It is to simulate a real top up. If you want to send a real top up where you buy a product do no use the simulate scenario
+        1. Choose a product to buy
+        2. Set a callback to receive the order statutes
+        3. Place the test purchase order using the Simulate scenarios
+        4. Wait for the callback top up status
+        <br />Note: Purchases are asynchronous, you must save all the purchase orders you send so you can update them when you receive the callback with the new order status.
+    5. Let our team know when you are ready to go live so we validate the implementation.
+    6. When all validated, credit you CY.SEND balance with money.
+    7. Use the  purchase order operation with scenario LIVE to buy products.
+    # 8 Integration is done, how do we go live?
+    Congratulations! You are close to starting your top up business. Follow the below steps:
+    1. Your account should have positive balance
+    2. Use the POST [/store/order](#/Store/createOrder) operation with scenario live and it will send real top ups
+    3. If you have any question before starting please contact our support.
+    # 9 Security
+    Various security mechanisms protect our infrastructure and the CUSTOMER. If
+    suspicious activity is detected, cysend.com systems will automatically ban
+    and terminate connections.
+    # 10 HTTP Status Codes
+    Code | Text | Description
+    ----------- | ----------- | -----------
+    200 | OK | Success!
+    201 | Created | The request has been fulfilled and resulted in a new resource being created.
+    202 | Accepted | The request has been accepted for processing, but the processing has not been completed.<br /><br />Note: All purchase orders are asynchronous. It means that when CUSTOMER executes a purchase order, the CY.SEND<br />OpenAPI replies “accepted” and in a separate background process the purchase order is sent to the<br />product issuer. A purchase order will remain in the “accepted” state until it receives a reply from the product issuer. This HTTP status code is not the final result of an order. To know the final result, wait for the callback URL request or pull the status using GET `/store/order` operation.
+    204 | No Content | The result of the search is empty.
+    400 | Bad Request | The request was invalid or cannot be otherwise served. An accompanying error message will explain further.<br />Placing an order with missing beneficiary information will result in this status.
+    401 | Unauthorized | Missing or incorrect authentication credentials.
+    402 | Payment Required | The order can't be placed because of insufficient balance. Please top up your account.
+    404 | Not Found | The URI requested is invalid or the resource requested, such as an order, does not exist.
+    500 | Internal Server Error | Something is broken. This is usually a temporary error, for example in a high load<br />situation or if an endpoint is temporarily having issues. Try again later or contact support.
+    502 | Bad Gateway | CY.SEND OpenAPI is down, or being upgraded.
+    503 | Service Unavailable | The CY.SEND OpenAPI servers are up, but overloaded with requests. Try again later or contact support.
+    504 | Gateway timeout | The CY.SEND OpenAPI servers are up, but the request couldn’t be serviced due to some failure<br />within the internal stack. Try again later or contact support.
+    # 11 About us
+  termsOfService: https://www.cysend.com/en/terms-of-service
+  title: CY.SEND® OpenAPI Documentation
+  version: 5.2.3
+servers:
+- description: CY.SEND
+  url: "https://www.cysend.com/openapi/{environment}/{version}"
+  variables:
+    environment:
+      default: prod
+      enum:
+      - prod
+    version:
+      default: v5.2.3
+      enum:
+      - v5.2.3
+tags:
+- description: All access operations
+  name: Access
+- description: All CUSTOMER account operations
+  name: Customer
+- description: All CY.SEND gift cards operations
+  name: CY.SEND Gift Card
+- description: All notification operations
+  name: Notifications
+- description: All CY.SEND OpenAPI operations
+  name: OpenAPI
+- description: All store operations
+  name: Store
+- description: All CUSTOMER verification operations
+  name: Verification
+paths:
+  /access/token:
+    get:
+      description: This operation returns the access token information.
+      operationId: getAccessToken
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Token'
+          description: OK
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+          description: Unauthorized access. Please check your credentials.
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+          description: Token not found
+      security:
+      - Token: []
+      summary: Retrieves an existing access token
+      tags:
+      - Access
+    post:
+      description: |
+        This operation creates an access token. Tokens are used to authenticate a third party (point of sale, application, partner, ...) to use the CY.SEND API on his behalf.
+        <br />
+        An access Token is a credential that can be used by an application to access an API.
+        <br />
+        The access token can be:
+        * IP restricted. A list of authorized public IP can be provided and the keyword 'mine' can be used to allow the IP that requested the token creation.
+        * Limited life time (TTL).
+      operationId: createAccessToken
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TokenOptions'
+        description: Token creation parameters
+        required: true
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Token'
+          description: Created
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+          description: Unauthorized access. Please check your credentials.
+      security:
+      - BasicAuthentication: []
+      summary: Creates a new access token
+      tags:
+      - Access
+  /store/catalogue:
+    get:
+      description: |
+        This operation returns the full content of the CY.SEND product catalogue. <br /> The catalogue can be filtered specifically for a single CY.SEND gift card. Only products that can be purchased by this gift card will be returned.
+      operationId: getCatalogue
+      parameters:
+      - description: CY.SEND gift card PIN code
+        explode: true
+        in: query
+        name: gift_card_code
+        required: false
+        schema:
+          example: "123456789"
+          type: string
+        style: form
+      - description: Set to true to receive PIN products usage instructions.
+        explode: true
+        in: query
+        name: return_usage_instruction
+        required: false
+        schema:
+          default: false
+          type: boolean
+        style: form
+      - description: List of language code in ISO 639-1 format separated by a coma.
+        explode: true
+        in: query
+        name: languages
+        required: false
+        schema:
+          example: "en,fr,ru"
+          type: string
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Catalogue'
+          description: OK
+        "204":
+          description: No content
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+          description: Unauthorized access. Please check your credentials.
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+          description: CY.SEND Gift Card not found
+      security:
+      - BasicAuthentication: []
+      - Token: []
+      summary: Retrieves the complete CY.SEND product catalogue
+      tags:
+      - Store
+  /store/catalogue/countries:
+    get:
+      description: |
+        This operation retrieves the list of countries where CY.SEND products are available.
+        <br />
+        The list can be filtered by:
+        * CY.SEND country ID
+        * Country ISO 3166-1 alpha-2
+        * Promotions
+        * CY.SEND gift card PIN code
+      operationId: getCountries
+      parameters:
+      - description: Country ID filter
+        explode: true
+        in: query
+        name: country_id
+        required: false
+        schema:
+          example: 233
+          type: integer
+        style: form
+      - description: Country ISO 3166-1 alpha-2 filter
+        explode: true
+        in: query
+        name: country_iso2
+        required: false
+        schema:
+          example: CH
+          pattern: "^[A-Z]{2}$"
+          type: string
+        style: form
+      - description: Promotion filter
+        explode: true
+        in: query
+        name: promotion
+        required: false
+        schema:
+          example: false
+          type: boolean
+        style: form
+      - description: CY.SEND gift card PIN code
+        explode: true
+        in: query
+        name: gift_card_code
+        required: false
+        schema:
+          example: "123456789"
+          type: string
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/Country'
+                type: array
+          description: OK
+        "204":
+          description: No content
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+          description: Unauthorized access. Please check your credentials.
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+          description: CY.SEND Gift Card or Country not found
+      security:
+      - BasicAuthentication: []
+      - Token: []
+      summary: Retrieves the CY.SEND product catalogue country list
+      tags:
+      - Store
+  /store/catalogue/categories:
+    get:
+      description: |
+        This operation retrieves the list of categories where CY.SEND products are available.
+        <br />
+        The product category list can be filtered by:
+        * CY.SEND country ID
+        * Country ISO 3166-1 alpha-2
+        * CY.SEND category ID
+        * Promotions
+        * CY.SEND gift card PIN code
+      operationId: getCategories
+      parameters:
+      - description: Country ID filter
+        explode: true
+        in: query
+        name: country_id
+        required: false
+        schema:
+          example: 233
+          type: integer
+        style: form
+      - description: Country ISO 3166-1 alpha-2 filter
+        explode: true
+        in: query
+        name: country_iso2
+        required: false
+        schema:
+          example: CH
+          pattern: "^[A-Z]{2}$"
+          type: string
+        style: form
+      - description: Category ID filter
+        explode: true
+        in: query
+        name: category_id
+        required: false
+        schema:
+          example: 14
+          type: integer
+        style: form
+      - description: Promotion filter
+        explode: true
+        in: query
+        name: promotion
+        required: false
+        schema:
+          example: false
+          type: boolean
+        style: form
+      - description: CY.SEND gift card PIN code
+        explode: true
+        in: query
+        name: gift_card_code
+        required: false
+        schema:
+          example: "123456789"
+          type: string
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/Category'
+                type: array
+          description: successful operation
+        "204":
+          description: No content
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+          description: Unauthorized access. Please check your credentials.
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+          description: CY.SEND Gift Card or Country or Category not found
+      security:
+      - BasicAuthentication: []
+      - Token: []
+      summary: Retrieves the CY.SEND product categories list from the catalogue
+      tags:
+      - Store
+  /store/catalogue/products:
+    get:
+      description: |
+        This operation retrieves the list of the CY.SEND products.
+        <br />
+        A product can belong to multiple countries and categories.
+        <br />
+        Each product requires specific beneficiary information to place a purchase order. Some will require only a mobile
+        number (the Mobile filter will attempt to detect the mobile operator, some countries do not support this feature,
+        check the local regulations for more details), some an account number, and others won’t require anything.
+        <br />
+
+        This list can be filtered by:
+        * CY.SEND country ID
+        * Country ISO 3166-1 alpha-2
+        * CY.SEND category ID
+        * CY.SEND product ID
+        * Maintenance
+        * Promotions
+        * CY.SEND gift card PIN code
+        * Mobile
+      operationId: getProducts
+      parameters:
+      - description: Country ID filter
+        explode: true
+        in: query
+        name: country_id
+        required: false
+        schema:
+          example: 233
+          type: integer
+        style: form
+      - description: Country ISO 3166-1 alpha-2 filter
+        explode: true
+        in: query
+        name: country_iso2
+        required: false
+        schema:
+          example: CH
+          pattern: "^[A-Z]{2}$"
+          type: string
+        style: form
+      - description: Category ID filter
+        explode: true
+        in: query
+        name: category_id
+        required: false
+        schema:
+          example: 14
+          type: integer
+        style: form
+      - description: Product ID filter
+        explode: true
+        in: query
+        name: product_id
+        required: false
+        schema:
+          example: 1234
+          type: integer
+        style: form
+      - description: Maintenance filter
+        explode: true
+        in: query
+        name: maintenance
+        required: false
+        schema:
+          example: false
+          type: boolean
+        style: form
+      - description: Promotion filter
+        explode: true
+        in: query
+        name: promotion
+        required: false
+        schema:
+          example: false
+          type: boolean
+        style: form
+      - description: CY.SEND gift card PIN code
+        explode: true
+        in: query
+        name: gift_card_code
+        required: false
+        schema:
+          example: "123456789"
+          type: string
+        style: form
+      - description: "This mobile lookup filter will attempt to detect the mobile\
+          \ operator (check local regulations to be sure it is fully supported) and\
+          \ return the corresponding product. This operation has a cost of 0.01 EUR\
+          \ per query. Fund your account before you use this operation. [Load your\
+          \ balance.](https://www.cysend.com/en/add-funds)"
+        explode: true
+        in: query
+        name: mobile
+        required: false
+        schema:
+          example: "+41791234567"
+          type: string
+        style: form
+      - description: Set to true to receive PIN products usage instructions.
+        explode: true
+        in: query
+        name: return_usage_instruction
+        required: false
+        schema:
+          default: false
+          type: boolean
+        style: form
+      - description: List of language code in ISO 639-1 format separated by a coma.
+        explode: true
+        in: query
+        name: languages
+        required: false
+        schema:
+          example: "en,fr,ru"
+          type: string
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/Product'
+                type: array
+          description: successful operation
+        "204":
+          description: No content
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+          description: Unauthorized access. Please check your credentials.
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+          description: CY.SEND Gift Card or Country or Category or Product not found
+      security:
+      - BasicAuthentication: []
+      - Token: []
+      summary: Retrieves the CY.SEND product catalogue list
+      tags:
+      - Store
+  /store/catalogue/face-value:
+    get:
+      description: |
+        This operation retrieves the list of the product face values.
+        <br />
+        They are two types of face value:
+        * Fixed: Means a set amount. The beneficiary will receive that exact amount and the CUSTOMER's balance will be debited of the cost.
+        * Range: Means a set of face values with a minimum, a maximum and a step. The API returns the cost of the minimum and the maximum face value. For example: a range from 1 to 10 step 1 would be: 1, 2, 3, 4 … 8, 9, 10. To calculate the cost of a single face value, since the cost is linear, you must use a rule of three. For example, to calculate the cost of face value 5 you should divide the maximum cost (cost of face value 10) by the maximum face value (10) multiplied by desired face value (5).
+        ---
+        The list can be filtered by:
+        * CY.SEND country ID
+        * Country ISO 3166-1 alpha-2
+        * CY.SEND category ID
+        * CY.SEND product ID
+        * CY.SEND face value ID
+        * Maintenance
+        * Promotions
+        * CY.SEND gift card PIN code
+        ---
+        NOTE: The face value ID are changed each time the value changes but they are NOT changed when the cost changes. This is valid for ranges and fixed values.
+      operationId: getFaceValues
+      parameters:
+      - description: Country ID filter
+        explode: true
+        in: query
+        name: country_id
+        required: false
+        schema:
+          example: 233
+          type: integer
+        style: form
+      - description: Country ISO 3166-1 alpha-2 filter
+        explode: true
+        in: query
+        name: country_iso2
+        required: false
+        schema:
+          example: CH
+          pattern: "^[A-Z]{2}$"
+          type: string
+        style: form
+      - description: Category ID filter
+        explode: true
+        in: query
+        name: category_id
+        required: false
+        schema:
+          example: 14
+          type: integer
+        style: form
+      - description: Product ID filter
+        explode: true
+        in: query
+        name: product_id
+        required: false
+        schema:
+          example: 1234
+          type: integer
+        style: form
+      - description: Face value ID filter
+        explode: true
+        in: query
+        name: face_value_id
+        required: false
+        schema:
+          example: 1234
+          type: integer
+        style: form
+      - description: Promotion filter
+        explode: true
+        in: query
+        name: promotion
+        required: false
+        schema:
+          example: false
+          type: boolean
+        style: form
+      - description: CY.SEND gift card PIN code
+        explode: true
+        in: query
+        name: gift_card_code
+        required: false
+        schema:
+          example: "123456789"
+          type: string
+        style: form
+      - description: Mobile number you want to recharge. CY.SEND will detect the mobile
+          operator of the number and return it. This service have a cost and will
+          be billed on this request.
+        explode: true
+        in: query
+        name: mobile
+        required: false
+        schema:
+          example: "+41791234567"
+          type: string
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FaceValue'
+          description: successful operation
+        "204":
+          description: No content
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+          description: Unauthorized access. Please check your credentials.
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+          description: CY.SEND Gift Card or Country or Category or Product or Face
+            value not found
+      security:
+      - BasicAuthentication: []
+      - Token: []
+      summary: Retrieves the CY.SEND product face value list
+      tags:
+      - Store
+  /store/catalogue/maintenance:
+    get:
+      description: |
+        This operation retrieves the list of current and future product maintenances.
+        <br />
+        When a product is under maintenance, it is not available for purchase.
+        <br />
+        The list can be filtered by:
+        * CY.SEND product ID
+      operationId: getMaintenance
+      parameters:
+      - description: Product ID filter
+        explode: true
+        in: query
+        name: product_id
+        required: false
+        schema:
+          example: 1234
+          type: integer
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/Maintenance'
+                type: array
+          description: successful operation
+        "204":
+          description: No content
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+          description: Unauthorized access. Please check your credentials.
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+          description: Product not found
+      security:
+      - BasicAuthentication: []
+      - Token: []
+      summary: Retrieves current and future product maintenances
+      tags:
+      - Store
+  /store/catalogue/promotion:
+    get:
+      description: |
+        This operation retrieves the list of current and future product promotions.
+        <br />
+        The list can be filtered by:
+        * CY.SEND product ID
+      operationId: getPromotions
+      parameters:
+      - description: Product ID filter
+        explode: true
+        in: query
+        name: product_id
+        required: false
+        schema:
+          example: 1234
+          type: integer
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/Promotion'
+                type: array
+          description: successful operation
+        "204":
+          description: No content
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+          description: Unauthorized access. Please check your credentials.
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+          description: Product not found
+      security:
+      - BasicAuthentication: []
+      - Token: []
+      summary: Retrieves current and future product promotions
+      tags:
+      - Store
+  /store/order:
+    get:
+      description: |
+        This optional operation retrieves past purchase order information if you have not received it using the callback URL.
+        <br />
+        It is strongly recommended to set a callback (callback_url parameter) for each order to automatically receive a
+        notification on the URL of your choice when an order changes status even if it comes after a long wait.
+        <br />
+        The `status` of an order can be:
+        * accepted: The purchase is still in progress. This means that we are waiting for a confirmation from the product
+        issuer or that CY.SEND delayed the transaction for security reasons.
+        * success: The purchase was executed successfully.
+        * failed: The purchase failed. Additional information is returned in `response_code`, `response_title` and
+        `response_description` parameters.
+        ---
+        For a successful top up, some product issuers provide a purchase reference number (`issuer_reference` parameter)
+        that can be used by the beneficiary for his customer care enquiries when contacting the product issuer.
+        <br />
+        <br />
+        If the purchase order contains a prepaid code product, the response will contain the prepaid code, the prepaid
+        code serial number, the prepaid code expiration and the prepaid code usage instructions (`prepaid_code` parameter).
+        <br />
+        <br />
+        Response codes (`response_code` parameter) are based on [ISO8583](https://en.wikipedia.org/wiki/ISO_8583#Response_code) codes.
+        <br />
+        <br />
+        Using a cron job to periodically check if there is an order status change is a waste of resources on both
+        sides. If you do not have a choice you can use the Retrieve a order operation.
+      operationId: getOrder
+      parameters:
+      - description: CY.SEND order unique ID filter
+        explode: true
+        in: query
+        name: uid
+        required: false
+        schema:
+          type: string
+        style: form
+      - description: CUSTOMER unique order ID filter
+        explode: true
+        in: query
+        name: user_uid
+        required: false
+        schema:
+          type: string
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                description: List of order request statuses
+                items:
+                  $ref: '#/components/schemas/OrderStatus'
+                type: array
+          description: successful operation
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+          description: Unauthorized access. Please check your credentials.
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+          description: Unauthorized access to this order or order not found
+      security:
+      - BasicAuthentication: []
+      - Token: []
+      summary: (Optional) Retrieves order information by CY.SEND order unique ID or
+        by CUSTOMER order unique ID
+      tags:
+      - Store
+    post:
+      callbacks:
+        transactionProcessed:
+          '{$request.body#/callback_url}':
+            post:
+              description: |
+                The callback request with contain a JSON body containing the order information.
+                <br/>
+                The `status` of an order can be:
+                * accepted: The purchase is still in progress. This means that we are waiting for a confirmation from the product
+                issuer or that CY.SEND delayed the transaction for security reasons.
+                * success: The purchase was executed successfully.
+                * failed: The purchase failed. Additional information is returned in `response_code`, `response_title` and
+                `response_description` parameters.
+                ---
+                For a successful top up, some product issuers provide a purchase reference number (`issuer_reference` parameter)
+                that can be used by the beneficiary for his customer care enquiries when contacting the product issuer.
+                <br />
+                <br />
+                If the purchase order contains a prepaid code product, the response will contain the prepaid code, the prepaid
+                code serial number, the prepaid code expiration and the prepaid code usage instructions (`prepaid_code` parameter).
+                <br />
+                <br />
+                Response codes (`response_code` parameter) are based on [ISO8583](https://en.wikipedia.org/wiki/ISO_8583#Response_code) codes.
+              operationId: transactionProcessed_Post
+              requestBody:
+                content:
+                  application/json:
+                    schema:
+                      description: List of order request statuses
+                      items:
+                        $ref: '#/components/schemas/OrderStatus'
+                      type: array
+                required: true
+              responses:
+                "200":
+                  description: "Your server must returns this code if it accepts the\
+                    \ callback. **If another code is received, the system will periodically\
+                    \ resend the request.**"
+              summary: Callback request
+              x-callback-request: true
+      description: |
+        This operation creates a purchase order for products and executes it asynchronously.
+        <br />
+        To purchase a product, CUSTOMER must:
+        * Select a product. [/store/catalogue/products](#/Store/getProducts)
+        * Select a face value (fixed or range). [/store/catalogue/face-value](#/Store/getFaceValues)
+        * Insure that you have the required beneficiary information [/store/catalogue/products](#/Store/getProducts)
+        * Assign a CUSTOMER unique order ID
+        ## API order scenarios
+        All purchase orders are asynchronous. It means that when CUSTOMER executes a purchase order, the CY.SEND
+        OpenAPI replies “accepted” and in a separate background process the purchase order is sent to the
+        product issuer. A purchase order will remain in the “accepted” state until it
+        receives a reply from the product issuer.
+        To test your callback script, create an order with a scenario and use the [callback operation](#/Store/forceCallback).
+        * simulate-success: This scenario will simulate a successful purchase order. To retrieve the status of your
+        order, use a callback.
+        * simulate-delayed-success: This scenario will simulate a delayed successful order purchase. The delay is
+        ranging from 60 to 120 seconds. To retrieve the status of your order, use a callback.
+        * simulate-failed: This scenario will simulate a failed order purchase. To retrieve the status of your
+        order, use a callback.
+        * simulate-delayed-failed: This scenario will failed a delayed successful order purchase. The delay is ranging
+        from 60 to 120 seconds. To retrieve the status of your order, use a callback.
+        * live: This is not a simulation. The request will be processed and your balance debited. To retrieve the
+        status of your order, use a callback.
+        ## Callback
+        The HTTP callback body will contain the purchase order information in JSON format.
+        <br />
+        It is strongly recommended to set a callback (callback_url parameter) for each order to automatically be
+        notified on the URL of your choice when an order changes status even if it comes after a long time.
+        ---
+        The `status` of an order can be:
+        * accepted: The purchase is still in progress. This means that we are waiting confirmation from the product
+        issuer or that CY.SEND delayed the transaction for security reasons.
+        * success: The  purchase was executed successfully.
+        * failed: The purchase failed. Additional failure information is returned in `response_code`, `response_title`
+        and `response_description` parameters.
+        ---
+        For a successful top up, some product issuers provide a purchase reference number (`issuer_reference` parameter)
+        that can be used by the beneficiary for his customer care enquiries when contacting the product issuer.
+        <br />
+        <br />
+        If the purchase order contains a prepaid code product, the response will contain the prepaid code, the prepaid
+        code serial number, the prepaid code expiration and the prepaid code usage instructions (`prepaid_code` parameter).
+        <br />
+        <br />
+        Response codes are based on [ISO8583](https://en.wikipedia.org/wiki/ISO_8583#Response_code) codes.
+        <br />
+        <br />
+        Using a cron job to periodically check if there is an order status change is a waste of resources on both
+        sides. If you do not have the choice you can use the Retrieve an order operation.
+      operationId: createOrder
+      requestBody:
+        content:
+          application/json:
+            schema:
+              description: List of order requests
+              items:
+                $ref: '#/components/schemas/OrderRequest'
+              type: array
+        description: Create purchase order request parameters
+        required: true
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                description: List of order request statuses
+                items:
+                  $ref: '#/components/schemas/OrderStatus'
+                type: array
+          description: Order created
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+          description: Wrong or missing product parameters
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+          description: Unauthorized access. Please check your credentials.
+        "402":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+          description: Insufficient funds. Please refill your account.
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+          description: Face value or Scenarios not found
+      security:
+      - BasicAuthentication: []
+      - Token: []
+      summary: Place a purchase order for CY.SEND products
+      tags:
+      - Store
+  /store/order/callback:
+    post:
+      description: |
+        This operation forces the CY.SEND OpenAPI to resend a callback request for a previously created order.
+        You can use this operation to test your callback request script.
+      operationId: forceCallback
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ForceCallbackRequest'
+        description: Force callback request parameters
+        required: true
+      responses:
+        "201":
+          description: Created
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+          description: Unauthorized access. Please check your credentials.
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+          description: Unauthorized access to this order or order not found
+      security:
+      - BasicAuthentication: []
+      - Token: []
+      summary: Force a callback request
+      tags:
+      - Store
+  /store/order/cost:
+    put:
+      description: |
+        This operation returns an indicative cost of a face value. It does not place a purchase order. It is only a calculation tool to know the cost of a face value before placing the final purchase order. It returns the current cost at the exact time of the operation.
+      operationId: getProductCost
+      requestBody:
+        content:
+          application/json:
+            schema:
+              description: List of products
+              items:
+                $ref: '#/components/schemas/CostRequest'
+              type: array
+        description: Order you want to calculate the cost
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                description: List of calculated prices
+                items:
+                  $ref: '#/components/schemas/CostResponse'
+                type: array
+          description: successful operation
+      security:
+      - BasicAuthentication: []
+      - Token: []
+      summary: Retrieve the cost of a face value
+      tags:
+      - Store
+  /store/order/responses:
+    get:
+      description: |
+        This operation retrieves the list of all possible purchase order response codes.
+        <br />
+        Response codes are based on [ISO8583](https://en.wikipedia.org/wiki/ISO_8583#Response_code) codes.
+      operationId: getResponses
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                description: List of order response codes
+                items:
+                  $ref: '#/components/schemas/OrderResponseCode'
+                type: array
+          description: successful operation
+      summary: Retrieve the list of possible order response codes
+      tags:
+      - Store
+  /customer/balance:
+    get:
+      description: This operation returns the CUSTOMER account default balance.
+      operationId: balance
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomerBalance'
+          description: OK
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+          description: Unauthorized access. Please check your credentials.
+      security:
+      - BasicAuthentication: []
+      - Token: []
+      summary: Retrieves customer account default balance
+      tags:
+      - Customer
+  /customer/subscriptions:
+    get:
+      description: This operation returns the CUSTOMER notifications subscriptions.
+      operationId: getSubscriptions
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/Subscription'
+                type: array
+          description: OK
+      security:
+      - BasicAuthentication: []
+      - Token: []
+      summary: Retrieves the list of subscriptions
+      tags:
+      - Customer
+      - Notifications
+  /verification/phone-number:
+    post:
+      description: |
+        This operation launches a phone number verification:
+        * sms: A verification SMS containing a code will be send.
+        * ivr-call: A verification call will speak a code.
+        ---
+        Use the PUT verification phone number [operation](#/Verification/phoneNumberVerify) to verify a request.
+      operationId: phoneNumberVerificationRequest
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VerificationRequest'
+        description: Verification request parameters
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VerificationStatus'
+          description: OK
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+          description: Unauthorized access. Please check your credentials.
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+          description: Language not found
+      security:
+      - BasicAuthentication: []
+      - Token: []
+      summary: Creates a phone number verification request
+      tags:
+      - Verification
+    put:
+      description: This operation checks if the correct verification code was received.
+      operationId: phoneNumberVerify
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Verification'
+        description: Verification parameters
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VerificationStatus'
+          description: OK
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+          description: Unauthorized access. Please check your credentials.
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+          description: Verification request not found
+      security:
+      - BasicAuthentication: []
+      - Token: []
+      summary: Confirm a verification request
+      tags:
+      - Verification
+  /gift-card/{gift_card_code}:
+    get:
+      description: This operation returns an existing CY.SEND gift card information.
+      operationId: getGiftCard
+      parameters:
+      - description: CY.SEND gift card PIN code
+        explode: false
+        in: path
+        name: gift_card_code
+        required: true
+        schema:
+          example: "123456789"
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GiftCard'
+          description: OK
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+          description: Unauthorized access. Please check your credentials.
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+          description: CY.SEND Gift card not found
+      security:
+      - BasicAuthentication: []
+      - Token: []
+      summary: Retrieves a CY.SEND gift card information by PIN code
+      tags:
+      - CY.SEND Gift Card
+  /gift-card/{gift_card_code}/active:
+    get:
+      description: This operation returns if the CY.SEND gift card is active.
+      operationId: getActive
+      parameters:
+      - description: CY.SEND gift card PIN code
+        explode: false
+        in: path
+        name: gift_card_code
+        required: true
+        schema:
+          example: "123456789"
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GiftCardActive'
+          description: OK
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+          description: Unauthorized access. Please check your credentials.
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+          description: CY.SEND Gift card not found
+      security:
+      - BasicAuthentication: []
+      - Token: []
+      summary: Checks if a CY.SEND gift card is active
+      tags:
+      - CY.SEND Gift Card
+    put:
+      description: This operation activates or deactivates a CY.SEND gift card.
+      operationId: putActive
+      parameters:
+      - description: CY.SEND gift card PIN code
+        explode: false
+        in: path
+        name: gift_card_code
+        required: true
+        schema:
+          example: "123456789"
+          type: string
+        style: simple
+      - description: Active flag
+        explode: true
+        in: query
+        name: active
+        required: true
+        schema:
+          example: true
+          type: boolean
+        style: form
+      responses:
+        "200":
+          description: OK
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+          description: Unauthorized access. Please check your credentials.
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+          description: CY.SEND Gift card not found
+      security:
+      - BasicAuthentication: []
+      - Token: []
+      summary: Activates or deactivates a CY.SEND gift card
+      tags:
+      - CY.SEND Gift Card
+  /openapi/errors:
+    get:
+      description: This operation retrieves the list of CY.SEND OpenAPI errors.
+      operationId: getErrors
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/APIErrorDescription'
+                type: array
+          description: OK
+      summary: Retrieves the list of CY.SEND OpenAPI errors
+      tags:
+      - OpenAPI
+  /openapi/ping:
+    get:
+      description: This operation is to monitor your connection to CY.SEND OpenAPI.
+      operationId: ping
+      responses:
+        "200":
+          content:
+            text/plain:
+              schema:
+                example: pong
+                type: string
+          description: OK
+      summary: CY.SEND OpenAPI connection status monitor
+      tags:
+      - OpenAPI
+  /notification/resource_types:
+    get:
+      description: This operation retrieves the notification resource types.
+      operationId: getNotificationResourceTypes
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/NotificationResourceType'
+                type: array
+          description: OK
+      security:
+      - BasicAuthentication: []
+      - Token: []
+      summary: Retrieve the list of notification resource types
+      tags:
+      - Notifications
+  /notification/events:
+    get:
+      description: This operation retrieves the list of events.
+      operationId: getNotificationEvents
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/NotificationEvent'
+                type: array
+          description: OK
+      security:
+      - BasicAuthentication: []
+      - Token: []
+      summary: Retrieve the list of notification events
+      tags:
+      - Notifications
+  /notification/channels:
+    get:
+      description: This operation retrieves the list of channels.
+      operationId: getNotificationChannels
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/NotificationChannel'
+                type: array
+          description: OK
+      security:
+      - BasicAuthentication: []
+      - Token: []
+      summary: Retrieve the list of notification channels
+      tags:
+      - Notifications
+components:
+  schemas:
+    Token:
+      description: Token information
+      example:
+        permissions:
+        - methods: GET
+          scope: store/catalogue/*
+        - methods: GET
+          scope: store/catalogue/*
+        authorized_ips: "8.8.8.8,8.8.4.4"
+        TTL: 2018-06-16T01:43:35+00:00
+        token: qEewe9ja7isob3MenWTz9HiEnD4A3cDi
+      properties:
+        token:
+          description: Token number
+          example: qEewe9ja7isob3MenWTz9HiEnD4A3cDi
+          pattern: "^[a-zA-Z0-9]{32}$"
+          type: string
+        TTL:
+          description: Expiry date and time in ISO8601 format
+          example: 2018-06-16T01:43:35+00:00
+          type: string
+        authorized_ips:
+          description: Coma separated list of authorized IPs
+          example: "8.8.8.8,8.8.4.4"
+          type: string
+        permissions:
+          description: Token permission list. The default permissions are identical
+            as the API credentials used to create this token.
+          items:
+            $ref: '#/components/schemas/Permission'
+          type: array
+      type: object
+    Permission:
+      description: Permission information
+      example:
+        methods: GET
+        scope: store/catalogue/*
+      properties:
+        scope:
+          description: URL pattern scope
+          example: store/catalogue/*
+          type: string
+        methods:
+          description: HTTP request method
+          example: GET
+          type: string
+      type: object
+    TokenOptions:
+      description: Token creation options
+      example:
+        ip_restricted: true
+        authorized_ips: mine
+        TTL: 3600
+      properties:
+        ip_restricted:
+          description: "If set to true, only IPs specified in 'authorized_ips' parameter\
+            \ will be allowed to use this token."
+          example: true
+          type: boolean
+        authorized_ips:
+          default: mine
+          description: Coma separated list of IPv4 addresses that will be authorized
+            to use this token. The variable 'mine' can be used to authorized the IP
+            that requested the token.
+          example: mine
+          maxLength: 256
+          type: string
+        TTL:
+          default: 3600
+          description: Token life in seconds. By default 3600 seconds (1 hour).
+          example: 3600
+          type: integer
+      required:
+      - ip_restricted
+      type: object
+    Catalogue:
+      description: Full catalogue
+      example:
+        face_values:
+          range:
+          - face_value_from: 10
+            maximum_cost: 95
+            cost_currency: CHF
+            product_id: 1234
+            face_value_currency: CHF
+            face_value_step: 10
+            face_value_id: 2222
+            face_value_to: 100
+            minimum_cost: 9.5
+            promotion: false
+          - face_value_from: 10
+            maximum_cost: 95
+            cost_currency: CHF
+            product_id: 1234
+            face_value_currency: CHF
+            face_value_step: 10
+            face_value_id: 2222
+            face_value_to: 100
+            minimum_cost: 9.5
+            promotion: false
+          fixed:
+          - cost: 9.5
+            cost_currency: CHF
+            product_id: 1234
+            face_value_currency: CHF
+            definition: ""
+            face_value: 10
+            face_value_id: 1111
+            promotion: false
+          - cost: 9.5
+            cost_currency: CHF
+            product_id: 1234
+            face_value_currency: CHF
+            definition: ""
+            face_value: 10
+            face_value_id: 1111
+            promotion: false
+        promotions:
+        - start_time: 2019-02-10T01:43:35+00:00
+          stop_time: 2019-02-20T02:00:00+00:00
+          product_id: 1234
+          promotion_id: 1234
+          face_value_ids:
+          - 1111
+          - 2222
+          time_zone:
+            utc_offset: "100"
+            name: Europe/Zurich
+          descriptions:
+          - denominations: This promotion is for all denominations.
+            language: en
+            conditions_summary: Double recharge for the New Year's eve.
+            title: New year promotion.
+            conditions: Recharge you mobile during the New Year's eve to receive a
+              double recharge.
+          - denominations: This promotion is for all denominations.
+            language: en
+            conditions_summary: Double recharge for the New Year's eve.
+            title: New year promotion.
+            conditions: Recharge you mobile during the New Year's eve to receive a
+              double recharge.
+        - start_time: 2019-02-10T01:43:35+00:00
+          stop_time: 2019-02-20T02:00:00+00:00
+          product_id: 1234
+          promotion_id: 1234
+          face_value_ids:
+          - 1111
+          - 2222
+          time_zone:
+            utc_offset: "100"
+            name: Europe/Zurich
+          descriptions:
+          - denominations: This promotion is for all denominations.
+            language: en
+            conditions_summary: Double recharge for the New Year's eve.
+            title: New year promotion.
+            conditions: Recharge you mobile during the New Year's eve to receive a
+              double recharge.
+          - denominations: This promotion is for all denominations.
+            language: en
+            conditions_summary: Double recharge for the New Year's eve.
+            title: New year promotion.
+            conditions: Recharge you mobile during the New Year's eve to receive a
+              double recharge.
+        countries:
+        - country_code: 41
+          country_iso_alpha3: CHE
+          country_name: Switzerland
+          country_iso_alpha2: CH
+          category_ids:
+          - 14
+          country_id: 233
+          promotion: false
+        - country_code: 41
+          country_iso_alpha3: CHE
+          country_name: Switzerland
+          country_iso_alpha2: CH
+          category_ids:
+          - 14
+          country_id: 233
+          promotion: false
+        categories:
+        - category_name: Mobile recharge
+          category_id: 14
+          product_ids:
+          - 1234
+          promotion: true
+        - category_name: Mobile recharge
+          category_id: 14
+          product_ids:
+          - 1234
+          promotion: true
+        maintenance:
+        - start_time: 2019-02-10T01:43:35+00:00
+          stop_time: 2019-02-20T02:00:00+00:00
+          maintenance_id: 1234
+          product_id: 1234
+          descriptions:
+          - language: en
+            text: Operator maintenance
+          - language: en
+            text: Operator maintenance
+        - start_time: 2019-02-10T01:43:35+00:00
+          stop_time: 2019-02-20T02:00:00+00:00
+          maintenance_id: 1234
+          product_id: 1234
+          descriptions:
+          - language: en
+            text: Operator maintenance
+          - language: en
+            text: Operator maintenance
+        products:
+        - country_zone: Others
+          logo_url: https://www.cysend.com/images/products_images/star.svg
+          countries:
+          - 233
+          - 233
+          type: instant
+          product_name: Swisscom
+          usage_instructions:
+          - language: en
+            text: To redeem code go to www.cysend.com
+          - language: en
+            text: To redeem code go to www.cysend.com
+          beneficiary_information:
+          - elements:
+            - description: description
+              value: value
+            - description: description
+              value: value
+            name: mobile
+            pattern: "^\\\\+41[0-9]+"
+            description: Beneficiary mobile number in E.164 format
+            type: input
+            required: true
+          - elements:
+            - description: description
+              value: value
+            - description: description
+              value: value
+            name: mobile
+            pattern: "^\\\\+41[0-9]+"
+            description: Beneficiary mobile number in E.164 format
+            type: input
+            required: true
+          product_id: 1234
+          categories:
+          - 14
+          - 14
+          face_value_ids:
+          - 1111
+          - 2222
+          product_description:
+          - language: en
+            text: Swisscom is a brand name that ...
+          - language: en
+            text: Swisscom is a brand name that ...
+          maintenance: false
+          promotion: false
+        - country_zone: Others
+          logo_url: https://www.cysend.com/images/products_images/star.svg
+          countries:
+          - 233
+          - 233
+          type: instant
+          product_name: Swisscom
+          usage_instructions:
+          - language: en
+            text: To redeem code go to www.cysend.com
+          - language: en
+            text: To redeem code go to www.cysend.com
+          beneficiary_information:
+          - elements:
+            - description: description
+              value: value
+            - description: description
+              value: value
+            name: mobile
+            pattern: "^\\\\+41[0-9]+"
+            description: Beneficiary mobile number in E.164 format
+            type: input
+            required: true
+          - elements:
+            - description: description
+              value: value
+            - description: description
+              value: value
+            name: mobile
+            pattern: "^\\\\+41[0-9]+"
+            description: Beneficiary mobile number in E.164 format
+            type: input
+            required: true
+          product_id: 1234
+          categories:
+          - 14
+          - 14
+          face_value_ids:
+          - 1111
+          - 2222
+          product_description:
+          - language: en
+            text: Swisscom is a brand name that ...
+          - language: en
+            text: Swisscom is a brand name that ...
+          maintenance: false
+          promotion: false
+      properties:
+        countries:
+          items:
+            $ref: '#/components/schemas/Country'
+          type: array
+        categories:
+          items:
+            $ref: '#/components/schemas/Category'
+          type: array
+        products:
+          items:
+            $ref: '#/components/schemas/Product'
+          type: array
+        face_values:
+          $ref: '#/components/schemas/FaceValue'
+        maintenance:
+          items:
+            $ref: '#/components/schemas/Maintenance'
+          type: array
+        promotions:
+          items:
+            $ref: '#/components/schemas/Promotion'
+          type: array
+      required:
+      - categories
+      - countries
+      - face_values
+      - maintenance
+      - products
+      type: object
+    Country:
+      description: Country information
+      example:
+        country_code: 41
+        country_iso_alpha3: CHE
+        country_name: Switzerland
+        country_iso_alpha2: CH
+        category_ids:
+        - 14
+        country_id: 233
+        promotion: false
+      properties:
+        country_id:
+          description: CY.SEND country unique ID
+          example: 233
+          type: integer
+        country_name:
+          description: Country name
+          example: Switzerland
+          type: string
+        country_code:
+          description: Country dialling code
+          example: 41
+          type: integer
+        country_iso_alpha2:
+          description: Country ISO 3166-1 alpha-2
+          example: CH
+          type: string
+        country_iso_alpha3:
+          description: Country ISO 3166-1 alpha-3
+          example: CHE
+          type: string
+        promotion:
+          description: True if there is a running promotion
+          example: false
+          type: boolean
+        category_ids:
+          description: List of available categories
+          example:
+          - 14
+          items:
+            type: integer
+          type: array
+      required:
+      - country_code
+      - country_id
+      - country_iso_alpha2
+      - country_iso_alpha3
+      - country_name
+      - promotion
+      type: object
+    Category:
+      description: Category information
+      example:
+        category_name: Mobile recharge
+        category_id: 14
+        product_ids:
+        - 1234
+        promotion: true
+      properties:
+        category_id:
+          description: CY.SEND category ID
+          example: 14
+          type: integer
+        category_name:
+          description: Category name
+          example: Mobile recharge
+          type: string
+        promotion:
+          description: True if there is a running promotion
+          example: true
+          type: boolean
+        product_ids:
+          description: List of available products
+          example:
+          - 1234
+          items:
+            type: integer
+          type: array
+      required:
+      - category_id
+      - category_name
+      - promotion
+      type: object
+    Product:
+      description: Product information
+      example:
+        country_zone: Others
+        logo_url: https://www.cysend.com/images/products_images/star.svg
+        countries:
+        - 233
+        - 233
+        type: instant
+        product_name: Swisscom
+        usage_instructions:
+        - language: en
+          text: To redeem code go to www.cysend.com
+        - language: en
+          text: To redeem code go to www.cysend.com
+        beneficiary_information:
+        - elements:
+          - description: description
+            value: value
+          - description: description
+            value: value
+          name: mobile
+          pattern: "^\\\\+41[0-9]+"
+          description: Beneficiary mobile number in E.164 format
+          type: input
+          required: true
+        - elements:
+          - description: description
+            value: value
+          - description: description
+            value: value
+          name: mobile
+          pattern: "^\\\\+41[0-9]+"
+          description: Beneficiary mobile number in E.164 format
+          type: input
+          required: true
+        product_id: 1234
+        categories:
+        - 14
+        - 14
+        face_value_ids:
+        - 1111
+        - 2222
+        product_description:
+        - language: en
+          text: Swisscom is a brand name that ...
+        - language: en
+          text: Swisscom is a brand name that ...
+        maintenance: false
+        promotion: false
+      properties:
+        country_zone:
+          description: Indication of the geographical zone in which the product can
+            be used. Countries in a zone might vary depending on product.
+          enum:
+          - Eurozone
+          - Global
+          - Others
+          example: Others
+          type: string
+        countries:
+          description: List of country IDs. A product can be in multiple countries.
+          items:
+            example: 233
+            type: integer
+          type: array
+        categories:
+          description: List of category IDs. A product can be in multiple categories.
+          items:
+            example: 14
+            type: integer
+          type: array
+        product_id:
+          description: Unique product ID
+          example: 1234
+          type: integer
+        product_name:
+          description: Product name
+          example: Swisscom
+          type: string
+        product_description:
+          description: List of prepaid product description in various languages
+          items:
+            $ref: '#/components/schemas/Product_product_description_inner'
+          type: array
+        logo_url:
+          description: URL to the product logo
+          example: https://www.cysend.com/images/products_images/star.svg
+          type: string
+        type:
+          $ref: '#/components/schemas/ProductType'
+        promotion:
+          description: True if there is a running promotion
+          example: false
+          type: boolean
+        maintenance:
+          description: True if the product is under maintenance
+          example: false
+          type: boolean
+        beneficiary_information:
+          description: "Each product has a different list or required beneficiary\
+            \ information to place a purchase order. Some will require beneficiary\
+            \ mobile number, account number, and others won’t require anything."
+          items:
+            $ref: '#/components/schemas/ProductParameter'
+          type: array
+        face_value_ids:
+          description: List of available face values
+          example:
+          - 1111
+          - 2222
+          items:
+            type: integer
+          type: array
+        usage_instructions:
+          description: List of prepaid code usage instructions in various languages
+          items:
+            $ref: '#/components/schemas/Product_usage_instructions_inner'
+          type: array
+      required:
+      - beneficiary_information
+      - categories
+      - countries
+      - country_zone
+      - face_value_ids
+      - logo_url
+      - maintenance
+      - product_description
+      - product_id
+      - product_name
+      - promotion
+      - type
+      type: object
+    ProductParameter:
+      description: Product parameter
+      example:
+        elements:
+        - description: description
+          value: value
+        - description: description
+          value: value
+        name: mobile
+        pattern: "^\\\\+41[0-9]+"
+        description: Beneficiary mobile number in E.164 format
+        type: input
+        required: true
+      properties:
+        name:
+          description: Parameter name
+          example: mobile
+          type: string
+        description:
+          description: Parameter description
+          example: Beneficiary mobile number in E.164 format
+          type: string
+        type:
+          description: Parameter type
+          enum:
+          - input
+          - select
+          example: input
+          type: string
+        pattern:
+          description: Parameter pattern (only present for type input parameter)
+          example: "^\\\\+41[0-9]+"
+          type: string
+        elements:
+          description: List of select box elements (only present for type select parameter)
+          items:
+            $ref: '#/components/schemas/ProductParameter_elements_inner'
+          type: array
+        required:
+          description: "If true, this parameter is mandatory."
+          example: true
+          type: boolean
+      required:
+      - description
+      - name
+      - required
+      - type
+      type: object
+    ProductType:
+      description: "Instant: means that the top up will credited directly to the customer\
+        \ account Prepaid code: means that the top up will be delivered as a prepaid\
+        \ code with usage instructions. The customer will have to follow the instructions\
+        \ to use his prepaid code. SMS: means that the product is a text message.\
+        \ HLR: means that the product is a mobile operator detection."
+      enum:
+      - instant
+      - prepaid_code
+      - sms
+      - hlr
+      example: instant
+      type: string
+    FaceValue:
+      description: Face value types
+      example:
+        range:
+        - face_value_from: 10
+          maximum_cost: 95
+          cost_currency: CHF
+          product_id: 1234
+          face_value_currency: CHF
+          face_value_step: 10
+          face_value_id: 2222
+          face_value_to: 100
+          minimum_cost: 9.5
+          promotion: false
+        - face_value_from: 10
+          maximum_cost: 95
+          cost_currency: CHF
+          product_id: 1234
+          face_value_currency: CHF
+          face_value_step: 10
+          face_value_id: 2222
+          face_value_to: 100
+          minimum_cost: 9.5
+          promotion: false
+        fixed:
+        - cost: 9.5
+          cost_currency: CHF
+          product_id: 1234
+          face_value_currency: CHF
+          definition: ""
+          face_value: 10
+          face_value_id: 1111
+          promotion: false
+        - cost: 9.5
+          cost_currency: CHF
+          product_id: 1234
+          face_value_currency: CHF
+          definition: ""
+          face_value: 10
+          face_value_id: 1111
+          promotion: false
+      properties:
+        fixed:
+          items:
+            $ref: '#/components/schemas/FixedFaceValue'
+          type: array
+        range:
+          items:
+            $ref: '#/components/schemas/RangeFaceValue'
+          type: array
+      required:
+      - fixed
+      - range
+      type: object
+    FixedFaceValue:
+      description: Fixed face value information
+      example:
+        cost: 9.5
+        cost_currency: CHF
+        product_id: 1234
+        face_value_currency: CHF
+        definition: ""
+        face_value: 10
+        face_value_id: 1111
+        promotion: false
+      properties:
+        product_id:
+          description: Product ID
+          example: 1234
+          type: integer
+        face_value_id:
+          description: Face value ID
+          example: 1111
+          type: integer
+        face_value:
+          description: Face value. This amount will be received by the beneficiary.
+          example: 10
+          type: number
+        face_value_currency:
+          description: Face value currency alphabetic ISO 4217 code
+          example: CHF
+          pattern: "^[A-Z]{3}$"
+          type: string
+        cost:
+          description: Cost of this face value.
+          example: 9.5
+          type: number
+        cost_currency:
+          description: The cost currency alphabetic ISO 4217 code. This currency will
+            always be the same as your CY.SEND account currency.
+          example: CHF
+          pattern: "^[A-Z]{3}$"
+          type: string
+        definition:
+          description: "The product definition. Some products have an additional definition.\
+            \ i.e: Some operator bundles include additional products (SMS, Data, ...)\
+            \ and are textually describes in this field."
+          example: ""
+          type: string
+        promotion:
+          description: True if there is a running promotion
+          example: false
+          type: boolean
+      required:
+      - cost
+      - cost_currency
+      - definition
+      - face_value
+      - face_value_currency
+      - face_value_id
+      - product_id
+      - promotion
+      type: object
+    RangeFaceValue:
+      description: Range face value information
+      example:
+        face_value_from: 10
+        maximum_cost: 95
+        cost_currency: CHF
+        product_id: 1234
+        face_value_currency: CHF
+        face_value_step: 10
+        face_value_id: 2222
+        face_value_to: 100
+        minimum_cost: 9.5
+        promotion: false
+      properties:
+        product_id:
+          description: Product ID
+          example: 1234
+          type: integer
+        face_value_id:
+          description: Face value ID
+          example: 2222
+          type: integer
+        face_value_from:
+          description: Minimum face value
+          example: 10
+          type: number
+        face_value_to:
+          description: Maximum face value
+          example: 100
+          type: number
+        face_value_step:
+          description: Incremental step of the face value range
+          example: 10
+          type: number
+        face_value_currency:
+          description: Face value currency alphabetic ISO 4217 code
+          example: CHF
+          pattern: "^[A-Z]{3}$"
+          type: string
+        minimum_cost:
+          description: Minimum face value cost.
+          example: 9.5
+          type: number
+        maximum_cost:
+          description: Maximum face value cost.
+          example: 95
+          type: number
+        cost_currency:
+          description: The cost currency alphabetic ISO 4217 code. This currency will
+            always be the same as your CY.SEND account currency.
+          example: CHF
+          pattern: "^[A-Z]{3}$"
+          type: string
+        promotion:
+          description: True if there is a running promotion
+          example: false
+          type: boolean
+      required:
+      - cost_currency
+      - face_value_currency
+      - face_value_from
+      - face_value_id
+      - face_value_step
+      - face_value_to
+      - maximum_cost
+      - minimum_cost
+      - product_id
+      - promotion
+      type: object
+    Maintenance:
+      description: Maintenance information
+      example:
+        start_time: 2019-02-10T01:43:35+00:00
+        stop_time: 2019-02-20T02:00:00+00:00
+        maintenance_id: 1234
+        product_id: 1234
+        descriptions:
+        - language: en
+          text: Operator maintenance
+        - language: en
+          text: Operator maintenance
+      properties:
+        maintenance_id:
+          description: Unique maintenance ID
+          example: 1234
+          type: integer
+        product_id:
+          description: Unique product ID
+          example: 1234
+          type: integer
+        start_time:
+          description: Date and time of maintenance start in ISO8601 format
+          example: 2019-02-10T01:43:35+00:00
+          type: string
+        stop_time:
+          description: Date and time of maintenance start in ISO8601 format
+          example: 2019-02-20T02:00:00+00:00
+          type: string
+        descriptions:
+          description: List of maintenance descriptions in various languages
+          items:
+            $ref: '#/components/schemas/Maintenance_descriptions_inner'
+          type: array
+      required:
+      - descriptions
+      - maintenance_id
+      - product_id
+      - start_time
+      - stop_time
+      type: object
+    Promotion:
+      description: Promotion information
+      example:
+        start_time: 2019-02-10T01:43:35+00:00
+        stop_time: 2019-02-20T02:00:00+00:00
+        product_id: 1234
+        promotion_id: 1234
+        face_value_ids:
+        - 1111
+        - 2222
+        time_zone:
+          utc_offset: "100"
+          name: Europe/Zurich
+        descriptions:
+        - denominations: This promotion is for all denominations.
+          language: en
+          conditions_summary: Double recharge for the New Year's eve.
+          title: New year promotion.
+          conditions: Recharge you mobile during the New Year's eve to receive a double
+            recharge.
+        - denominations: This promotion is for all denominations.
+          language: en
+          conditions_summary: Double recharge for the New Year's eve.
+          title: New year promotion.
+          conditions: Recharge you mobile during the New Year's eve to receive a double
+            recharge.
+      properties:
+        promotion_id:
+          description: Unique promotion ID
+          example: 1234
+          type: integer
+        product_id:
+          description: Unique product ID
+          example: 1234
+          type: integer
+        start_time:
+          description: Date and time of promotion start in ISO8601 format
+          example: 2019-02-10T01:43:35+00:00
+          type: string
+        stop_time:
+          description: Date and time of promotion start in ISO8601 format
+          example: 2019-02-20T02:00:00+00:00
+          type: string
+        time_zone:
+          $ref: '#/components/schemas/Promotion_time_zone'
+        descriptions:
+          description: List of promotion descriptions in various languages
+          items:
+            $ref: '#/components/schemas/Promotion_descriptions_inner'
+          type: array
+        face_value_ids:
+          description: List of face values included in the promotion
+          example:
+          - 1111
+          - 2222
+          items:
+            type: integer
+          type: array
+      required:
+      - descriptions
+      - product_id
+      - promotion_id
+      - start_time
+      - stop_time
+      - time_zone
+      type: object
+    OrderRequest:
+      description: Order creation request
+      example:
+        callback_url: https://myserver.com/send/callback/here
+        scenario: null
+        beneficiary_information:
+        - name: mobile
+          value: "+41791234567"
+        - name: mobile
+          value: "+41791234567"
+        face_value_currency: CHF
+        face_value: 10
+        face_value_id: 1234
+        gift_card_code: "123456789"
+        notifications:
+        - trigger_uid: 1111-2222-3333-4444
+          channel_uid: 1111-2222-3333-4444
+          destination:
+          - name: url
+            value: https://myserver.com/send/callback/here
+          - name: url
+            value: https://myserver.com/send/callback/here
+        - trigger_uid: 1111-2222-3333-4444
+          channel_uid: 1111-2222-3333-4444
+          destination:
+          - name: url
+            value: https://myserver.com/send/callback/here
+          - name: url
+            value: https://myserver.com/send/callback/here
+        user_uid: myTID
+      properties:
+        user_uid:
+          description: CUSTOMER must assign a unique order ID
+          example: myTID
+          pattern: "^\\w{,32}$"
+          type: string
+        face_value_id:
+          description: Face value ID
+          example: 1234
+          type: integer
+        face_value:
+          description: Face value
+          example: 10
+          type: number
+        face_value_currency:
+          description: Face value currency alphabetic ISO 4217 code
+          example: CHF
+          pattern: "^[A-Z]{3}$"
+          type: string
+        gift_card_code:
+          example: "123456789"
+          type: string
+        scenario:
+          $ref: '#/components/schemas/OrderScenario'
+        callback_url:
+          deprecated: true
+          description: CUSTOMER callback URL were order status will be send
+          example: https://myserver.com/send/callback/here
+          format: uri
+          type: string
+        beneficiary_information:
+          description: List of beneficiary information
+          items:
+            $ref: '#/components/schemas/BeneficiaryInformation'
+          type: array
+        notifications:
+          description: Notification subscriptions
+          items:
+            $ref: '#/components/schemas/Subscription'
+          type: array
+      required:
+      - beneficiary_information
+      - face_value
+      - face_value_currency
+      - face_value_id
+      - user_uid
+      type: object
+    CostRequest:
+      description: Price calculation request
+      example:
+        beneficiary_information:
+        - name: mobile
+          value: "+41791234567"
+        - name: mobile
+          value: "+41791234567"
+        face_value_currency: CHF
+        face_value: 10
+        face_value_id: 1234
+        gift_card_code: "123456789"
+      properties:
+        face_value_id:
+          description: Face value ID
+          example: 1234
+          type: integer
+        face_value:
+          description: Face value
+          example: 10
+          type: number
+        face_value_currency:
+          description: Face value currency alphabetic ISO 4217 code
+          example: CHF
+          pattern: "^[A-Z]{3}$"
+          type: string
+        gift_card_code:
+          example: "123456789"
+          type: string
+        beneficiary_information:
+          description: List of beneficiary information
+          items:
+            $ref: '#/components/schemas/BeneficiaryInformation'
+          type: array
+      required:
+      - beneficiary_information
+      - face_value
+      - face_value_currency
+      - face_value_id
+      type: object
+    CostResponse:
+      description: Product cost
+      example:
+        date: 2019-02-20T02:00:00+00:00
+        cost: 2.15
+        beneficiary_information:
+        - name: mobile
+          value: "+41791234567"
+        - name: mobile
+          value: "+41791234567"
+        product_id: 1234
+        face_value_currency: CHF
+        currency: CHF
+        face_value: 10
+        face_value_id: 1234
+        gift_card_code: "123456789"
+      properties:
+        date:
+          description: Order date and time in ISO8601 format
+          example: 2019-02-20T02:00:00+00:00
+          type: string
+        product_id:
+          description: CY.SEND product id
+          example: 1234
+          type: integer
+        face_value_id:
+          description: Face value ID
+          example: 1234
+          type: integer
+        face_value:
+          description: Face value
+          example: 10
+          type: number
+        face_value_currency:
+          description: Face value currency alphabetic ISO 4217 code
+          example: CHF
+          pattern: "^[A-Z]{3}$"
+          type: string
+        gift_card_code:
+          example: "123456789"
+          type: string
+        cost:
+          description: Order cost
+          example: 2.15
+          type: number
+        currency:
+          description: Order currency alphabetic ISO 4217 code
+          example: CHF
+          pattern: "^[A-Z]{3}$"
+          type: string
+        beneficiary_information:
+          description: List of beneficiary information
+          items:
+            $ref: '#/components/schemas/BeneficiaryInformation'
+          type: array
+      required:
+      - beneficiary_information
+      - cost
+      - currency
+      - date
+      - face_value
+      - face_value_currency
+      - face_value_id
+      - product_id
+      type: object
+    Subscription:
+      description: Notification subscription
+      example:
+        trigger_uid: 1111-2222-3333-4444
+        channel_uid: 1111-2222-3333-4444
+        destination:
+        - name: url
+          value: https://myserver.com/send/callback/here
+        - name: url
+          value: https://myserver.com/send/callback/here
+      properties:
+        trigger_uid:
+          description: Trigger unique ID
+          example: 1111-2222-3333-4444
+          pattern: "^\\d{4}\\-\\d{4}\\-\\d{4}\\-\\d{4}\\$"
+          type: string
+        channel_uid:
+          description: Channel unique ID
+          example: 1111-2222-3333-4444
+          pattern: "^\\d{4}\\-\\d{4}\\-\\d{4}\\-\\d{4}\\$"
+          type: string
+        destination:
+          description: List of destination parameters
+          items:
+            $ref: '#/components/schemas/NotificationDestinationParameter'
+          type: array
+      required:
+      - channel_uid
+      - destination
+      - trigger_uid
+      type: object
+    NotificationResourceType:
+      description: Notification resource type information
+      example:
+        uid: 1111-2222-3333-4444
+        name: Purchase
+      properties:
+        uid:
+          description: Type unique ID
+          example: 1111-2222-3333-4444
+          pattern: "^\\d{4}\\-\\d{4}\\-\\d{4}\\-\\d{4}\\$"
+          type: string
+        name:
+          description: Type name
+          example: Purchase
+          type: string
+      required:
+      - name
+      - uid
+      type: object
+    NotificationEvent:
+      description: Notification event information
+      example:
+        uid: 1111-2222-3333-4444
+        resource_type_uid: 1111-2222-3333-4444
+        name: Purchase result
+      properties:
+        uid:
+          description: Unique ID
+          example: 1111-2222-3333-4444
+          pattern: "^\\d{4}\\-\\d{4}\\-\\d{4}\\-\\d{4}\\$"
+          type: string
+        resource_type_uid:
+          description: Notification resource type unique ID
+          example: 1111-2222-3333-4444
+          pattern: "^\\d{4}\\-\\d{4}\\-\\d{4}\\-\\d{4}\\$"
+          type: string
+        name:
+          description: Event name
+          example: Purchase result
+          type: string
+      required:
+      - name
+      - resource_type_uid
+      - uid
+      type: object
+    NotificationChannel:
+      description: Notification channel information
+      example:
+        uid: 1111-2222-3333-4444
+        name: CY.SEND email
+        destination:
+        - name: url
+          required: true
+        - name: url
+          required: true
+        type: Email
+        whitelabel: true
+      properties:
+        uid:
+          description: Unique ID
+          example: 1111-2222-3333-4444
+          pattern: "^\\d{4}\\-\\d{4}\\-\\d{4}\\-\\d{4}\\$"
+          type: string
+        type:
+          description: Type
+          example: Email
+          type: string
+        name:
+          description: Name
+          example: CY.SEND email
+          type: string
+        whitelabel:
+          description: If true means notifications will be send using your templates;
+            If false CY.SEND templates will be used.
+          example: true
+          type: boolean
+        destination:
+          description: List of destination parameters
+          items:
+            $ref: '#/components/schemas/NotificationDestinationParameterDescription'
+          type: array
+      required:
+      - destination
+      - name
+      - type
+      - uid
+      - whitelabel
+      type: object
+    NotificationDestinationParameter:
+      description: Notification destination parameter
+      example:
+        name: url
+        value: https://myserver.com/send/callback/here
+      properties:
+        name:
+          description: Parameter name
+          example: url
+          type: string
+        value:
+          description: Parameter value
+          example: https://myserver.com/send/callback/here
+          type: string
+      required:
+      - name
+      - value
+      type: object
+    NotificationDestinationParameterDescription:
+      description: Notification destination parameter
+      example:
+        name: url
+        required: true
+      properties:
+        name:
+          description: Name
+          example: url
+          type: string
+        required:
+          description: If true means that the destination parameter is mandatory.
+          example: true
+          type: boolean
+      required:
+      - name
+      - required
+      type: object
+    OrderScenario:
+      default: live
+      description: Order scenario
+      enum:
+      - live
+      - simulate-success
+      - simulate-failed
+      - simulate-delayed-success
+      - simulate-delayed-failed
+      type: string
+    BeneficiaryInformation:
+      description: Beneficiary information
+      example:
+        name: mobile
+        value: "+41791234567"
+      properties:
+        name:
+          description: Information name
+          example: mobile
+          type: string
+        value:
+          description: Information value
+          example: "+41791234567"
+          type: string
+      required:
+      - name
+      - value
+      type: object
+    OrderStatus:
+      description: Order status
+      example:
+        date: 2019-02-20T02:00:00+00:00
+        response_description: Transaction was sent successfully
+        response_code: "00"
+        cost: 2.15
+        response_title: Transaction successful
+        face_value: 10
+        face_value_id: 1234
+        gift_card_code: "123456789"
+        callback_url: https://myserver.com/send/callback/here
+        uid: 0101-123456-01
+        scenario: null
+        beneficiary_information:
+        - name: mobile
+          value: "+41791234567"
+        - name: mobile
+          value: "+41791234567"
+        prepaid_code:
+          code: "123456789"
+          serial: "987654321"
+          pin_code: "4321"
+          pdf_link: https://www.cysend.com/4sboRH1gQ6TljZAlGBMFstzcZNJafT83/receipt/XXXX
+          expiration: 2019-02-20T02:00:00+00:00
+          usage_instructions:
+          - language: en
+            text: To redeem code go to www.cysend.com
+          - language: en
+            text: To redeem code go to www.cysend.com
+        face_value_currency: CHF
+        issuer_reference: REF123456789
+        currency: CHF
+        user_uid: myTID
+        status: accepted
+      properties:
+        uid:
+          description: CY.SEND order unique ID
+          example: 0101-123456-01
+          type: string
+        user_uid:
+          description: CUSTOMER unique order ID
+          example: myTID
+          type: string
+        date:
+          description: Order date and time in ISO8601 format
+          example: 2019-02-20T02:00:00+00:00
+          type: string
+        face_value_id:
+          description: Face value ID
+          example: 1234
+          type: integer
+        face_value:
+          description: Face value
+          example: 10
+          type: number
+        face_value_currency:
+          description: Face value currency alphabetic ISO 4217 code
+          example: CHF
+          pattern: "^[A-Z]{3}$"
+          type: string
+        gift_card_code:
+          example: "123456789"
+          type: string
+        scenario:
+          $ref: '#/components/schemas/OrderScenario'
+        callback_url:
+          description: CUSTOMER callback URL were order status will be send
+          example: https://myserver.com/send/callback/here
+          format: uri
+          type: string
+        cost:
+          description: Order cost
+          example: 2.15
+          type: number
+        currency:
+          description: Order currency alphabetic ISO 4217 code
+          example: CHF
+          pattern: "^[A-Z]{3}$"
+          type: string
+        beneficiary_information:
+          description: List of beneficiary information
+          items:
+            $ref: '#/components/schemas/BeneficiaryInformation'
+          type: array
+        issuer_reference:
+          description: Issuer reference
+          example: REF123456789
+          type: string
+        prepaid_code:
+          $ref: '#/components/schemas/PrepaidCode'
+        status:
+          description: Order status
+          enum:
+          - accepted
+          - success
+          - failed
+          type: string
+        response_code:
+          description: Response code as per ISO8583
+          example: "00"
+          type: string
+        response_title:
+          description: Response code title
+          example: Transaction successful
+          type: string
+        response_description:
+          description: Response code description
+          example: Transaction was sent successfully
+          type: string
+      required:
+      - beneficiary_information
+      - cost
+      - currency
+      - date
+      - face_value
+      - face_value_currency
+      - face_value_id
+      - response_code
+      - response_description
+      - response_title
+      - scenario
+      - status
+      - uid
+      - user_uid
+      type: object
+    PrepaidCode:
+      description: Prepaid code product information
+      example:
+        code: "123456789"
+        serial: "987654321"
+        pin_code: "4321"
+        pdf_link: https://www.cysend.com/4sboRH1gQ6TljZAlGBMFstzcZNJafT83/receipt/XXXX
+        expiration: 2019-02-20T02:00:00+00:00
+        usage_instructions:
+        - language: en
+          text: To redeem code go to www.cysend.com
+        - language: en
+          text: To redeem code go to www.cysend.com
+      properties:
+        code:
+          description: Prepaid code
+          example: "123456789"
+          type: string
+        serial:
+          description: Prepaid code serial number
+          example: "987654321"
+          type: string
+        pin_code:
+          description: Security code
+          example: "4321"
+          type: string
+        expiration:
+          description: Prepaid code expiry date and time in ISO8601 format
+          example: 2019-02-20T02:00:00+00:00
+          type: string
+        pdf_link:
+          description: Link to PDF file with pin and barcode
+          example: https://www.cysend.com/4sboRH1gQ6TljZAlGBMFstzcZNJafT83/receipt/XXXX
+          type: string
+        usage_instructions:
+          description: List of prepaid code usage instructions in various languages
+          items:
+            $ref: '#/components/schemas/Product_usage_instructions_inner'
+          type: array
+      required:
+      - code
+      - expiration
+      - serial
+      type: object
+    OrderResponseCode:
+      description: Order response code
+      example:
+        response_description: Transaction was sent successfully
+        response_code: "00"
+        response_title: Transaction successful
+      properties:
+        response_code:
+          description: Response code as per ISO8583
+          example: "00"
+          type: string
+        response_title:
+          description: Response code title
+          example: Transaction successful
+          type: string
+        response_description:
+          description: Response code description
+          example: Transaction was sent successfully
+          type: string
+      required:
+      - response_code
+      - response_description
+      - response_title
+      type: object
+    ForceCallbackRequest:
+      description: Force callback request
+      example:
+        uid: 0101-123456-01
+        user_uid: myTID
+      properties:
+        uid:
+          description: CY.SEND order unique ID
+          example: 0101-123456-01
+          type: string
+        user_uid:
+          description: CUSTOMER unique order ID
+          example: myTID
+          type: string
+      required:
+      - uid
+      - user_uid
+      type: object
+    VerificationRequest:
+      description: Verification request parameters
+      example:
+        number: number
+        method: null
+        template_id: 0
+        language: language
+      properties:
+        method:
+          $ref: '#/components/schemas/VerificationMethod'
+        number:
+          description: Phone number to verify. The number must be in E.164 format
+          pattern: "^\\+?[1-9]\\d{1,14}$"
+          type: string
+        template_id:
+          description: Template ID for SMS verification
+          type: integer
+        language:
+          description: Language code in ISO 639-1 format (default 'en' = English)
+          type: string
+      required:
+      - method
+      - number
+      type: object
+    VerificationStatus:
+      description: Verification status
+      example:
+        uid: uid
+        method: null
+        status: accepted
+      properties:
+        uid:
+          description: Verification request unique code
+          pattern: "^\\w{8}$"
+          type: string
+        method:
+          $ref: '#/components/schemas/VerificationMethod'
+        status:
+          description: Verification status
+          enum:
+          - accepted
+          - success
+          - failed
+          type: string
+      required:
+      - status
+      - type
+      - verification_id
+      type: object
+    VerificationMethod:
+      description: Type of verification
+      enum:
+      - sms
+      - ivr-call
+      type: string
+    Verification:
+      description: Verification parameters
+      example:
+        uid: uid
+        code: code
+        method: null
+      properties:
+        uid:
+          description: Verification request unique code
+          pattern: "^\\w{8}$"
+          type: string
+        method:
+          $ref: '#/components/schemas/VerificationMethod'
+        code:
+          description: Verification code that the owner of the phone number received
+          pattern: "^\\d{4}$"
+          type: string
+      required:
+      - code
+      - method
+      - uid
+      type: object
+    CustomerBalance:
+      description: CUSTOMER balance
+      example:
+        balance: 2.15
+        currency: CHF
+      properties:
+        balance:
+          description: CUSTOMER balance
+          example: 2.15
+          type: number
+        currency:
+          description: CUSTOMER balance currency alphabetic ISO 4217 code
+          example: CHF
+          pattern: "^[A-Z]{3}$"
+          type: string
+      required:
+      - balance
+      - currency
+      type: object
+    GiftCard:
+      description: CY.SEND gift card information
+      example:
+        code: "123456789"
+        serial: "987654321"
+        remaining_balance: 2
+        name: CY.SEND gift card
+        logo: https://www.cysend.com/gift-card/logo.png
+        active: true
+        currency: EUR
+        expiration: 2019-02-20T02:00:00+00:00
+        face_value: 5.5
+        usage_instruction: Go to https://www.cysend.com to redeem your gift card.
+      properties:
+        code:
+          description: CY.SEND gift card PIN code
+          example: "123456789"
+          type: string
+        serial:
+          description: CY.SEND gift card serial number
+          example: "987654321"
+          type: string
+        name:
+          description: CY.SEND gift card name
+          example: CY.SEND gift card
+          type: string
+        logo:
+          description: CY.SEND gift card logo URL
+          example: https://www.cysend.com/gift-card/logo.png
+          type: string
+        active:
+          description: Flag to see if CY.SEND gift card is active or not
+          example: true
+          type: boolean
+        face_value:
+          description: CY.SEND gift card face value
+          example: 5.5
+          type: number
+        currency:
+          description: CY.SEND gift card face-value currency alphabetic ISO 4217 code
+          example: EUR
+          pattern: "^[A-Z]{3}$"
+          type: string
+        remaining_balance:
+          description: CY.SEND gift card remaining balance
+          example: 2
+          type: number
+        expiration:
+          description: CY.SEND gift card expiry date and time in ISO8601 format
+          example: 2019-02-20T02:00:00+00:00
+          type: string
+        usage_instruction:
+          description: CY.SEND gift card usage information
+          example: Go to https://www.cysend.com to redeem your gift card.
+          type: string
+      required:
+      - active
+      - code
+      - currency
+      - expiration
+      - face_value
+      - logo
+      - name
+      - remaining_balance
+      - serial
+      - usage_instruction
+      type: object
+    GiftCardActive:
+      description: Gift card active
+      example:
+        active: true
+      properties:
+        active:
+          description: Flag to see if gift card is active or not
+          example: true
+          type: boolean
+      required:
+      - active
+      type: object
+    APIError:
+      description: API error information
+      example:
+        code: API_123456
+        information: The parameter user_uid is missing.
+        message: Missing parameter
+      properties:
+        code:
+          description: "For more information, share this error code with the support\
+            \ team"
+          example: API_123456
+          type: string
+        message:
+          description: Error code description
+          example: Missing parameter
+          type: string
+        information:
+          description: Additional information
+          example: The parameter user_uid is missing.
+          type: string
+      type: object
+    APIErrorDescription:
+      description: API error description
+      example:
+        code: API_123456
+        http: 404
+        message: Product not found
+      properties:
+        http:
+          description: HTTP status code
+          example: 404
+          type: integer
+        code:
+          description: "For more information, share this error code with the support\
+            \ team"
+          example: API_123456
+          type: string
+        message:
+          description: Error code description
+          example: Product not found
+          type: string
+      type: object
+    Product_product_description_inner:
+      description: A prepaid product description in a specific language
+      example:
+        language: en
+        text: Swisscom is a brand name that ...
+      properties:
+        language:
+          description: Language code in ISO 639-1 format
+          example: en
+          type: string
+        text:
+          description: Product description
+          example: Swisscom is a brand name that ...
+          type: string
+      required:
+      - language
+      - text
+      type: object
+    Product_usage_instructions_inner:
+      description: A prepaid code usage instruction in a specific language
+      example:
+        language: en
+        text: To redeem code go to www.cysend.com
+      properties:
+        language:
+          description: Language code in ISO 639-1 format
+          example: en
+          type: string
+        text:
+          description: Usage instruction
+          example: To redeem code go to www.cysend.com
+          type: string
+      required:
+      - language
+      - text
+      type: object
+    ProductParameter_elements_inner:
+      description: Selectbox element
+      example:
+        description: description
+        value: value
+      properties:
+        value:
+          description: Value that must be sent during purchase
+          type: string
+        description:
+          description: Information that must be shown to the CUSTOMER'S customer.
+          type: string
+      type: object
+    Maintenance_descriptions_inner:
+      description: A maintenance description in a specific language
+      example:
+        language: en
+        text: Operator maintenance
+      properties:
+        language:
+          description: Language code in ISO 639-1 format
+          example: en
+          type: string
+        text:
+          description: Maintenance description
+          example: Operator maintenance
+          type: string
+      required:
+      - language
+      - text
+      type: object
+    Promotion_time_zone:
+      description: Time zone information
+      example:
+        utc_offset: "100"
+        name: Europe/Zurich
+      properties:
+        name:
+          description: Time zone name
+          example: Europe/Zurich
+          type: string
+        utc_offset:
+          description: UTC offset
+          example: "100"
+          type: string
+      required:
+      - name
+      - utc_difference
+      type: object
+    Promotion_descriptions_inner:
+      description: Promotion description in a specific language
+      example:
+        denominations: This promotion is for all denominations.
+        language: en
+        conditions_summary: Double recharge for the New Year's eve.
+        title: New year promotion.
+        conditions: Recharge you mobile during the New Year's eve to receive a double
+          recharge.
+      properties:
+        language:
+          description: Language code in ISO 639-1 format
+          example: en
+          type: string
+        title:
+          description: Promotion title
+          example: New year promotion.
+          type: string
+        conditions_summary:
+          description: Promotion conditions summary
+          example: Double recharge for the New Year's eve.
+          type: string
+        conditions:
+          description: Promotion description
+          example: Recharge you mobile during the New Year's eve to receive a double
+            recharge.
+          type: string
+        denominations:
+          description: Promotion denominations explanation
+          example: This promotion is for all denominations.
+          type: string
+      required:
+      - conditions
+      - conditions_summary
+      - denominations
+      - language
+      - title
+      type: object
+  securitySchemes:
+    BasicAuthentication:
+      description: |
+        In the context of an HTTP transaction, basic access authentication is a
+        method for an HTTP user agent to provide a user name and password when
+        making a request. For security reason, this authentication method should
+        only be used on HTTPS request.
+        <br />
+        [Wikipedia](https://en.wikipedia.org/wiki/Basic_access_authentication)
+      scheme: basic
+      type: http
+    Token:
+      description: API token authentication
+      in: header
+      name: Api-token
+      type: apiKey
