@@ -4,14 +4,14 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**Balance** | **float32** | CUSTOMER balance | 
+**Balance** | **decimal.Decimal** | CUSTOMER balance | 
 **Currency** | **string** | CUSTOMER balance currency alphabetic ISO 4217 code | 
 
 ## Methods
 
 ### NewCustomerBalance
 
-`func NewCustomerBalance(balance float32, currency string, ) *CustomerBalance`
+`func NewCustomerBalance(balance decimal.Decimal, currency string, ) *CustomerBalance`
 
 NewCustomerBalance instantiates a new CustomerBalance object
 This constructor will assign default values to properties that have it defined,
@@ -28,20 +28,20 @@ but it doesn't guarantee that properties required by API are set
 
 ### GetBalance
 
-`func (o *CustomerBalance) GetBalance() float32`
+`func (o *CustomerBalance) GetBalance() decimal.Decimal`
 
 GetBalance returns the Balance field if non-nil, zero value otherwise.
 
 ### GetBalanceOk
 
-`func (o *CustomerBalance) GetBalanceOk() (*float32, bool)`
+`func (o *CustomerBalance) GetBalanceOk() (*decimal.Decimal, bool)`
 
 GetBalanceOk returns a tuple with the Balance field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetBalance
 
-`func (o *CustomerBalance) SetBalance(v float32)`
+`func (o *CustomerBalance) SetBalance(v decimal.Decimal)`
 
 SetBalance sets Balance field to given value.
 

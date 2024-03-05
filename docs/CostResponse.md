@@ -7,10 +7,10 @@ Name | Type | Description | Notes
 **Date** | **string** | Order date and time in ISO8601 format | 
 **ProductId** | **int32** | CY.SEND product id | 
 **FaceValueId** | **int32** | Face value ID | 
-**FaceValue** | **float32** | Face value | 
+**FaceValue** | **decimal.Decimal** | Face value | 
 **FaceValueCurrency** | **string** | Face value currency alphabetic ISO 4217 code | 
 **GiftCardCode** | Pointer to **string** |  | [optional] 
-**Cost** | **float32** | Order cost | 
+**Cost** | **decimal.Decimal** | Order cost | 
 **Currency** | **string** | Order currency alphabetic ISO 4217 code | 
 **BeneficiaryInformation** | [**[]BeneficiaryInformation**](BeneficiaryInformation.md) | List of beneficiary information | 
 
@@ -18,7 +18,7 @@ Name | Type | Description | Notes
 
 ### NewCostResponse
 
-`func NewCostResponse(date string, productId int32, faceValueId int32, faceValue float32, faceValueCurrency string, cost float32, currency string, beneficiaryInformation []BeneficiaryInformation, ) *CostResponse`
+`func NewCostResponse(date string, productId int32, faceValueId int32, faceValue decimal.Decimal, faceValueCurrency string, cost decimal.Decimal, currency string, beneficiaryInformation []BeneficiaryInformation, ) *CostResponse`
 
 NewCostResponse instantiates a new CostResponse object
 This constructor will assign default values to properties that have it defined,
@@ -95,20 +95,20 @@ SetFaceValueId sets FaceValueId field to given value.
 
 ### GetFaceValue
 
-`func (o *CostResponse) GetFaceValue() float32`
+`func (o *CostResponse) GetFaceValue() decimal.Decimal`
 
 GetFaceValue returns the FaceValue field if non-nil, zero value otherwise.
 
 ### GetFaceValueOk
 
-`func (o *CostResponse) GetFaceValueOk() (*float32, bool)`
+`func (o *CostResponse) GetFaceValueOk() (*decimal.Decimal, bool)`
 
 GetFaceValueOk returns a tuple with the FaceValue field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetFaceValue
 
-`func (o *CostResponse) SetFaceValue(v float32)`
+`func (o *CostResponse) SetFaceValue(v decimal.Decimal)`
 
 SetFaceValue sets FaceValue field to given value.
 
@@ -160,20 +160,20 @@ HasGiftCardCode returns a boolean if a field has been set.
 
 ### GetCost
 
-`func (o *CostResponse) GetCost() float32`
+`func (o *CostResponse) GetCost() decimal.Decimal`
 
 GetCost returns the Cost field if non-nil, zero value otherwise.
 
 ### GetCostOk
 
-`func (o *CostResponse) GetCostOk() (*float32, bool)`
+`func (o *CostResponse) GetCostOk() (*decimal.Decimal, bool)`
 
 GetCostOk returns a tuple with the Cost field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetCost
 
-`func (o *CostResponse) SetCost(v float32)`
+`func (o *CostResponse) SetCost(v decimal.Decimal)`
 
 SetCost sets Cost field to given value.
 

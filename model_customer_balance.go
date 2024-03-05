@@ -14,6 +14,8 @@ import (
 	"encoding/json"
 	"bytes"
 	"fmt"
+
+	"github.com/shopspring/decimal"
 )
 
 // checks if the CustomerBalance type satisfies the MappedNullable interface at compile time
@@ -22,7 +24,7 @@ var _ MappedNullable = &CustomerBalance{}
 // CustomerBalance CUSTOMER balance
 type CustomerBalance struct {
 	// CUSTOMER balance
-	Balance float32 `json:"balance"`
+	Balance decimal.Decimal `json:"balance"`
 	// CUSTOMER balance currency alphabetic ISO 4217 code
 	Currency string `json:"currency"`
 }
@@ -33,7 +35,7 @@ type _CustomerBalance CustomerBalance
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewCustomerBalance(balance float32, currency string) *CustomerBalance {
+func NewCustomerBalance(balance decimal.Decimal, currency string) *CustomerBalance {
 	this := CustomerBalance{}
 	this.Balance = balance
 	this.Currency = currency
@@ -49,9 +51,9 @@ func NewCustomerBalanceWithDefaults() *CustomerBalance {
 }
 
 // GetBalance returns the Balance field value
-func (o *CustomerBalance) GetBalance() float32 {
+func (o *CustomerBalance) GetBalance() decimal.Decimal {
 	if o == nil {
-		var ret float32
+		var ret decimal.Decimal
 		return ret
 	}
 
@@ -60,7 +62,7 @@ func (o *CustomerBalance) GetBalance() float32 {
 
 // GetBalanceOk returns a tuple with the Balance field value
 // and a boolean to check if the value has been set.
-func (o *CustomerBalance) GetBalanceOk() (*float32, bool) {
+func (o *CustomerBalance) GetBalanceOk() (*decimal.Decimal, bool) {
 	if o == nil {
 		return nil, false
 	}
@@ -68,7 +70,7 @@ func (o *CustomerBalance) GetBalanceOk() (*float32, bool) {
 }
 
 // SetBalance sets field value
-func (o *CustomerBalance) SetBalance(v float32) {
+func (o *CustomerBalance) SetBalance(v decimal.Decimal) {
 	o.Balance = v
 }
 

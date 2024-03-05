@@ -40,7 +40,7 @@ import (
 )
 
 func main() {
-	orderRequest := []openapiclient.OrderRequest{*openapiclient.NewOrderRequest("myTID", int32(1234), float32(10), "CHF", []openapiclient.BeneficiaryInformation{*openapiclient.NewBeneficiaryInformation("mobile", "+41791234567")})} // []OrderRequest | Create purchase order request parameters
+	orderRequest := []openapiclient.OrderRequest{*openapiclient.NewOrderRequest("myTID", int32(1234), decimal.Decimal(10), "CHF", []openapiclient.BeneficiaryInformation{*openapiclient.NewBeneficiaryInformation("mobile", "+41791234567")})} // []OrderRequest | Create purchase order request parameters
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)
@@ -600,7 +600,7 @@ import (
 )
 
 func main() {
-	costRequest := []openapiclient.CostRequest{*openapiclient.NewCostRequest(int32(1234), float32(10), "CHF", []openapiclient.BeneficiaryInformation{*openapiclient.NewBeneficiaryInformation("mobile", "+41791234567")})} // []CostRequest | Order you want to calculate the cost
+	costRequest := []openapiclient.CostRequest{*openapiclient.NewCostRequest(int32(1234), decimal.Decimal(10), "CHF", []openapiclient.BeneficiaryInformation{*openapiclient.NewBeneficiaryInformation("mobile", "+41791234567")})} // []CostRequest | Order you want to calculate the cost
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)

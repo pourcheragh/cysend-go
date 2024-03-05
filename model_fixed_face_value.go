@@ -14,6 +14,8 @@ import (
 	"encoding/json"
 	"bytes"
 	"fmt"
+
+	"github.com/shopspring/decimal"
 )
 
 // checks if the FixedFaceValue type satisfies the MappedNullable interface at compile time
@@ -26,11 +28,11 @@ type FixedFaceValue struct {
 	// Face value ID
 	FaceValueId int32 `json:"face_value_id"`
 	// Face value. This amount will be received by the beneficiary.
-	FaceValue float32 `json:"face_value"`
+	FaceValue decimal.Decimal `json:"face_value"`
 	// Face value currency alphabetic ISO 4217 code
 	FaceValueCurrency string `json:"face_value_currency"`
 	// Cost of this face value.
-	Cost float32 `json:"cost"`
+	Cost decimal.Decimal `json:"cost"`
 	// The cost currency alphabetic ISO 4217 code. This currency will always be the same as your CY.SEND account currency.
 	CostCurrency string `json:"cost_currency"`
 	// The product definition. Some products have an additional definition. i.e: Some operator bundles include additional products (SMS, Data, ...) and are textually describes in this field.
@@ -45,7 +47,7 @@ type _FixedFaceValue FixedFaceValue
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewFixedFaceValue(productId int32, faceValueId int32, faceValue float32, faceValueCurrency string, cost float32, costCurrency string, definition string, promotion bool) *FixedFaceValue {
+func NewFixedFaceValue(productId int32, faceValueId int32, faceValue decimal.Decimal, faceValueCurrency string, cost decimal.Decimal, costCurrency string, definition string, promotion bool) *FixedFaceValue {
 	this := FixedFaceValue{}
 	this.ProductId = productId
 	this.FaceValueId = faceValueId
@@ -115,9 +117,9 @@ func (o *FixedFaceValue) SetFaceValueId(v int32) {
 }
 
 // GetFaceValue returns the FaceValue field value
-func (o *FixedFaceValue) GetFaceValue() float32 {
+func (o *FixedFaceValue) GetFaceValue() decimal.Decimal {
 	if o == nil {
-		var ret float32
+		var ret decimal.Decimal
 		return ret
 	}
 
@@ -126,7 +128,7 @@ func (o *FixedFaceValue) GetFaceValue() float32 {
 
 // GetFaceValueOk returns a tuple with the FaceValue field value
 // and a boolean to check if the value has been set.
-func (o *FixedFaceValue) GetFaceValueOk() (*float32, bool) {
+func (o *FixedFaceValue) GetFaceValueOk() (*decimal.Decimal, bool) {
 	if o == nil {
 		return nil, false
 	}
@@ -134,7 +136,7 @@ func (o *FixedFaceValue) GetFaceValueOk() (*float32, bool) {
 }
 
 // SetFaceValue sets field value
-func (o *FixedFaceValue) SetFaceValue(v float32) {
+func (o *FixedFaceValue) SetFaceValue(v decimal.Decimal) {
 	o.FaceValue = v
 }
 
@@ -163,9 +165,9 @@ func (o *FixedFaceValue) SetFaceValueCurrency(v string) {
 }
 
 // GetCost returns the Cost field value
-func (o *FixedFaceValue) GetCost() float32 {
+func (o *FixedFaceValue) GetCost() decimal.Decimal {
 	if o == nil {
-		var ret float32
+		var ret decimal.Decimal
 		return ret
 	}
 
@@ -174,7 +176,7 @@ func (o *FixedFaceValue) GetCost() float32 {
 
 // GetCostOk returns a tuple with the Cost field value
 // and a boolean to check if the value has been set.
-func (o *FixedFaceValue) GetCostOk() (*float32, bool) {
+func (o *FixedFaceValue) GetCostOk() (*decimal.Decimal, bool) {
 	if o == nil {
 		return nil, false
 	}
@@ -182,7 +184,7 @@ func (o *FixedFaceValue) GetCostOk() (*float32, bool) {
 }
 
 // SetCost sets field value
-func (o *FixedFaceValue) SetCost(v float32) {
+func (o *FixedFaceValue) SetCost(v decimal.Decimal) {
 	o.Cost = v
 }
 

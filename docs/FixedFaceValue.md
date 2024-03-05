@@ -6,9 +6,9 @@ Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **ProductId** | **int32** | Product ID | 
 **FaceValueId** | **int32** | Face value ID | 
-**FaceValue** | **float32** | Face value. This amount will be received by the beneficiary. | 
+**FaceValue** | **decimal.Decimal** | Face value. This amount will be received by the beneficiary. | 
 **FaceValueCurrency** | **string** | Face value currency alphabetic ISO 4217 code | 
-**Cost** | **float32** | Cost of this face value. | 
+**Cost** | **decimal.Decimal** | Cost of this face value. | 
 **CostCurrency** | **string** | The cost currency alphabetic ISO 4217 code. This currency will always be the same as your CY.SEND account currency. | 
 **Definition** | **string** | The product definition. Some products have an additional definition. i.e: Some operator bundles include additional products (SMS, Data, ...) and are textually describes in this field. | 
 **Promotion** | **bool** | True if there is a running promotion | 
@@ -17,7 +17,7 @@ Name | Type | Description | Notes
 
 ### NewFixedFaceValue
 
-`func NewFixedFaceValue(productId int32, faceValueId int32, faceValue float32, faceValueCurrency string, cost float32, costCurrency string, definition string, promotion bool, ) *FixedFaceValue`
+`func NewFixedFaceValue(productId int32, faceValueId int32, faceValue decimal.Decimal, faceValueCurrency string, cost decimal.Decimal, costCurrency string, definition string, promotion bool, ) *FixedFaceValue`
 
 NewFixedFaceValue instantiates a new FixedFaceValue object
 This constructor will assign default values to properties that have it defined,
@@ -74,20 +74,20 @@ SetFaceValueId sets FaceValueId field to given value.
 
 ### GetFaceValue
 
-`func (o *FixedFaceValue) GetFaceValue() float32`
+`func (o *FixedFaceValue) GetFaceValue() decimal.Decimal`
 
 GetFaceValue returns the FaceValue field if non-nil, zero value otherwise.
 
 ### GetFaceValueOk
 
-`func (o *FixedFaceValue) GetFaceValueOk() (*float32, bool)`
+`func (o *FixedFaceValue) GetFaceValueOk() (*decimal.Decimal, bool)`
 
 GetFaceValueOk returns a tuple with the FaceValue field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetFaceValue
 
-`func (o *FixedFaceValue) SetFaceValue(v float32)`
+`func (o *FixedFaceValue) SetFaceValue(v decimal.Decimal)`
 
 SetFaceValue sets FaceValue field to given value.
 
@@ -114,20 +114,20 @@ SetFaceValueCurrency sets FaceValueCurrency field to given value.
 
 ### GetCost
 
-`func (o *FixedFaceValue) GetCost() float32`
+`func (o *FixedFaceValue) GetCost() decimal.Decimal`
 
 GetCost returns the Cost field if non-nil, zero value otherwise.
 
 ### GetCostOk
 
-`func (o *FixedFaceValue) GetCostOk() (*float32, bool)`
+`func (o *FixedFaceValue) GetCostOk() (*decimal.Decimal, bool)`
 
 GetCostOk returns a tuple with the Cost field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetCost
 
-`func (o *FixedFaceValue) SetCost(v float32)`
+`func (o *FixedFaceValue) SetCost(v decimal.Decimal)`
 
 SetCost sets Cost field to given value.
 

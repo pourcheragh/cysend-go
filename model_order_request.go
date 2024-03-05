@@ -14,6 +14,8 @@ import (
 	"encoding/json"
 	"bytes"
 	"fmt"
+
+	"github.com/shopspring/decimal"
 )
 
 // checks if the OrderRequest type satisfies the MappedNullable interface at compile time
@@ -26,7 +28,7 @@ type OrderRequest struct {
 	// Face value ID
 	FaceValueId int32 `json:"face_value_id"`
 	// Face value
-	FaceValue float32 `json:"face_value"`
+	FaceValue decimal.Decimal `json:"face_value"`
 	// Face value currency alphabetic ISO 4217 code
 	FaceValueCurrency string `json:"face_value_currency"`
 	GiftCardCode *string `json:"gift_card_code,omitempty"`
@@ -46,7 +48,7 @@ type _OrderRequest OrderRequest
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewOrderRequest(userUid string, faceValueId int32, faceValue float32, faceValueCurrency string, beneficiaryInformation []BeneficiaryInformation) *OrderRequest {
+func NewOrderRequest(userUid string, faceValueId int32, faceValue decimal.Decimal, faceValueCurrency string, beneficiaryInformation []BeneficiaryInformation) *OrderRequest {
 	this := OrderRequest{}
 	this.UserUid = userUid
 	this.FaceValueId = faceValueId
@@ -117,9 +119,9 @@ func (o *OrderRequest) SetFaceValueId(v int32) {
 }
 
 // GetFaceValue returns the FaceValue field value
-func (o *OrderRequest) GetFaceValue() float32 {
+func (o *OrderRequest) GetFaceValue() decimal.Decimal {
 	if o == nil {
-		var ret float32
+		var ret decimal.Decimal
 		return ret
 	}
 
@@ -128,7 +130,7 @@ func (o *OrderRequest) GetFaceValue() float32 {
 
 // GetFaceValueOk returns a tuple with the FaceValue field value
 // and a boolean to check if the value has been set.
-func (o *OrderRequest) GetFaceValueOk() (*float32, bool) {
+func (o *OrderRequest) GetFaceValueOk() (*decimal.Decimal, bool) {
 	if o == nil {
 		return nil, false
 	}
@@ -136,7 +138,7 @@ func (o *OrderRequest) GetFaceValueOk() (*float32, bool) {
 }
 
 // SetFaceValue sets field value
-func (o *OrderRequest) SetFaceValue(v float32) {
+func (o *OrderRequest) SetFaceValue(v decimal.Decimal) {
 	o.FaceValue = v
 }
 

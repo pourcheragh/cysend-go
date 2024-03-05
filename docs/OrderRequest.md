@@ -6,7 +6,7 @@ Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **UserUid** | **string** | CUSTOMER must assign a unique order ID | 
 **FaceValueId** | **int32** | Face value ID | 
-**FaceValue** | **float32** | Face value | 
+**FaceValue** | **decimal.Decimal** | Face value | 
 **FaceValueCurrency** | **string** | Face value currency alphabetic ISO 4217 code | 
 **GiftCardCode** | Pointer to **string** |  | [optional] 
 **Scenario** | Pointer to [**OrderScenario**](OrderScenario.md) |  | [optional] [default to ORDERSCENARIO_LIVE]
@@ -18,7 +18,7 @@ Name | Type | Description | Notes
 
 ### NewOrderRequest
 
-`func NewOrderRequest(userUid string, faceValueId int32, faceValue float32, faceValueCurrency string, beneficiaryInformation []BeneficiaryInformation, ) *OrderRequest`
+`func NewOrderRequest(userUid string, faceValueId int32, faceValue decimal.Decimal, faceValueCurrency string, beneficiaryInformation []BeneficiaryInformation, ) *OrderRequest`
 
 NewOrderRequest instantiates a new OrderRequest object
 This constructor will assign default values to properties that have it defined,
@@ -75,20 +75,20 @@ SetFaceValueId sets FaceValueId field to given value.
 
 ### GetFaceValue
 
-`func (o *OrderRequest) GetFaceValue() float32`
+`func (o *OrderRequest) GetFaceValue() decimal.Decimal`
 
 GetFaceValue returns the FaceValue field if non-nil, zero value otherwise.
 
 ### GetFaceValueOk
 
-`func (o *OrderRequest) GetFaceValueOk() (*float32, bool)`
+`func (o *OrderRequest) GetFaceValueOk() (*decimal.Decimal, bool)`
 
 GetFaceValueOk returns a tuple with the FaceValue field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetFaceValue
 
-`func (o *OrderRequest) SetFaceValue(v float32)`
+`func (o *OrderRequest) SetFaceValue(v decimal.Decimal)`
 
 SetFaceValue sets FaceValue field to given value.
 

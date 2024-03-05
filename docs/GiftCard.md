@@ -9,9 +9,9 @@ Name | Type | Description | Notes
 **Name** | **string** | CY.SEND gift card name | 
 **Logo** | **string** | CY.SEND gift card logo URL | 
 **Active** | **bool** | Flag to see if CY.SEND gift card is active or not | 
-**FaceValue** | **float32** | CY.SEND gift card face value | 
+**FaceValue** | **decimal.Decimal** | CY.SEND gift card face value | 
 **Currency** | **string** | CY.SEND gift card face-value currency alphabetic ISO 4217 code | 
-**RemainingBalance** | **float32** | CY.SEND gift card remaining balance | 
+**RemainingBalance** | **decimal.Decimal** | CY.SEND gift card remaining balance | 
 **Expiration** | **string** | CY.SEND gift card expiry date and time in ISO8601 format | 
 **UsageInstruction** | **string** | CY.SEND gift card usage information | 
 
@@ -19,7 +19,7 @@ Name | Type | Description | Notes
 
 ### NewGiftCard
 
-`func NewGiftCard(code string, serial string, name string, logo string, active bool, faceValue float32, currency string, remainingBalance float32, expiration string, usageInstruction string, ) *GiftCard`
+`func NewGiftCard(code string, serial string, name string, logo string, active bool, faceValue decimal.Decimal, currency string, remainingBalance decimal.Decimal, expiration string, usageInstruction string, ) *GiftCard`
 
 NewGiftCard instantiates a new GiftCard object
 This constructor will assign default values to properties that have it defined,
@@ -136,20 +136,20 @@ SetActive sets Active field to given value.
 
 ### GetFaceValue
 
-`func (o *GiftCard) GetFaceValue() float32`
+`func (o *GiftCard) GetFaceValue() decimal.Decimal`
 
 GetFaceValue returns the FaceValue field if non-nil, zero value otherwise.
 
 ### GetFaceValueOk
 
-`func (o *GiftCard) GetFaceValueOk() (*float32, bool)`
+`func (o *GiftCard) GetFaceValueOk() (*decimal.Decimal, bool)`
 
 GetFaceValueOk returns a tuple with the FaceValue field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetFaceValue
 
-`func (o *GiftCard) SetFaceValue(v float32)`
+`func (o *GiftCard) SetFaceValue(v decimal.Decimal)`
 
 SetFaceValue sets FaceValue field to given value.
 
@@ -176,20 +176,20 @@ SetCurrency sets Currency field to given value.
 
 ### GetRemainingBalance
 
-`func (o *GiftCard) GetRemainingBalance() float32`
+`func (o *GiftCard) GetRemainingBalance() decimal.Decimal`
 
 GetRemainingBalance returns the RemainingBalance field if non-nil, zero value otherwise.
 
 ### GetRemainingBalanceOk
 
-`func (o *GiftCard) GetRemainingBalanceOk() (*float32, bool)`
+`func (o *GiftCard) GetRemainingBalanceOk() (*decimal.Decimal, bool)`
 
 GetRemainingBalanceOk returns a tuple with the RemainingBalance field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetRemainingBalance
 
-`func (o *GiftCard) SetRemainingBalance(v float32)`
+`func (o *GiftCard) SetRemainingBalance(v decimal.Decimal)`
 
 SetRemainingBalance sets RemainingBalance field to given value.
 

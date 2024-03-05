@@ -14,6 +14,8 @@ import (
 	"encoding/json"
 	"bytes"
 	"fmt"
+
+	"github.com/shopspring/decimal"
 )
 
 // checks if the CostResponse type satisfies the MappedNullable interface at compile time
@@ -28,12 +30,12 @@ type CostResponse struct {
 	// Face value ID
 	FaceValueId int32 `json:"face_value_id"`
 	// Face value
-	FaceValue float32 `json:"face_value"`
+	FaceValue decimal.Decimal `json:"face_value"`
 	// Face value currency alphabetic ISO 4217 code
 	FaceValueCurrency string `json:"face_value_currency"`
 	GiftCardCode *string `json:"gift_card_code,omitempty"`
 	// Order cost
-	Cost float32 `json:"cost"`
+	Cost decimal.Decimal `json:"cost"`
 	// Order currency alphabetic ISO 4217 code
 	Currency string `json:"currency"`
 	// List of beneficiary information
@@ -46,7 +48,7 @@ type _CostResponse CostResponse
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewCostResponse(date string, productId int32, faceValueId int32, faceValue float32, faceValueCurrency string, cost float32, currency string, beneficiaryInformation []BeneficiaryInformation) *CostResponse {
+func NewCostResponse(date string, productId int32, faceValueId int32, faceValue decimal.Decimal, faceValueCurrency string, cost decimal.Decimal, currency string, beneficiaryInformation []BeneficiaryInformation) *CostResponse {
 	this := CostResponse{}
 	this.Date = date
 	this.ProductId = productId
@@ -140,9 +142,9 @@ func (o *CostResponse) SetFaceValueId(v int32) {
 }
 
 // GetFaceValue returns the FaceValue field value
-func (o *CostResponse) GetFaceValue() float32 {
+func (o *CostResponse) GetFaceValue() decimal.Decimal {
 	if o == nil {
-		var ret float32
+		var ret decimal.Decimal
 		return ret
 	}
 
@@ -151,7 +153,7 @@ func (o *CostResponse) GetFaceValue() float32 {
 
 // GetFaceValueOk returns a tuple with the FaceValue field value
 // and a boolean to check if the value has been set.
-func (o *CostResponse) GetFaceValueOk() (*float32, bool) {
+func (o *CostResponse) GetFaceValueOk() (*decimal.Decimal, bool) {
 	if o == nil {
 		return nil, false
 	}
@@ -159,7 +161,7 @@ func (o *CostResponse) GetFaceValueOk() (*float32, bool) {
 }
 
 // SetFaceValue sets field value
-func (o *CostResponse) SetFaceValue(v float32) {
+func (o *CostResponse) SetFaceValue(v decimal.Decimal) {
 	o.FaceValue = v
 }
 
@@ -220,9 +222,9 @@ func (o *CostResponse) SetGiftCardCode(v string) {
 }
 
 // GetCost returns the Cost field value
-func (o *CostResponse) GetCost() float32 {
+func (o *CostResponse) GetCost() decimal.Decimal {
 	if o == nil {
-		var ret float32
+		var ret decimal.Decimal
 		return ret
 	}
 
@@ -231,7 +233,7 @@ func (o *CostResponse) GetCost() float32 {
 
 // GetCostOk returns a tuple with the Cost field value
 // and a boolean to check if the value has been set.
-func (o *CostResponse) GetCostOk() (*float32, bool) {
+func (o *CostResponse) GetCostOk() (*decimal.Decimal, bool) {
 	if o == nil {
 		return nil, false
 	}
@@ -239,7 +241,7 @@ func (o *CostResponse) GetCostOk() (*float32, bool) {
 }
 
 // SetCost sets field value
-func (o *CostResponse) SetCost(v float32) {
+func (o *CostResponse) SetCost(v decimal.Decimal) {
 	o.Cost = v
 }
 

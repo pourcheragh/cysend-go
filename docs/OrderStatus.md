@@ -8,12 +8,12 @@ Name | Type | Description | Notes
 **UserUid** | **string** | CUSTOMER unique order ID | 
 **Date** | **string** | Order date and time in ISO8601 format | 
 **FaceValueId** | **int32** | Face value ID | 
-**FaceValue** | **float32** | Face value | 
+**FaceValue** | **decimal.Decimal** | Face value | 
 **FaceValueCurrency** | **string** | Face value currency alphabetic ISO 4217 code | 
 **GiftCardCode** | Pointer to **string** |  | [optional] 
 **Scenario** | [**OrderScenario**](OrderScenario.md) |  | [default to ORDERSCENARIO_LIVE]
 **CallbackUrl** | Pointer to **string** | CUSTOMER callback URL were order status will be send | [optional] 
-**Cost** | **float32** | Order cost | 
+**Cost** | **decimal.Decimal** | Order cost | 
 **Currency** | **string** | Order currency alphabetic ISO 4217 code | 
 **BeneficiaryInformation** | [**[]BeneficiaryInformation**](BeneficiaryInformation.md) | List of beneficiary information | 
 **IssuerReference** | Pointer to **string** | Issuer reference | [optional] 
@@ -27,7 +27,7 @@ Name | Type | Description | Notes
 
 ### NewOrderStatus
 
-`func NewOrderStatus(uid string, userUid string, date string, faceValueId int32, faceValue float32, faceValueCurrency string, scenario OrderScenario, cost float32, currency string, beneficiaryInformation []BeneficiaryInformation, status string, responseCode string, responseTitle string, responseDescription string, ) *OrderStatus`
+`func NewOrderStatus(uid string, userUid string, date string, faceValueId int32, faceValue decimal.Decimal, faceValueCurrency string, scenario OrderScenario, cost decimal.Decimal, currency string, beneficiaryInformation []BeneficiaryInformation, status string, responseCode string, responseTitle string, responseDescription string, ) *OrderStatus`
 
 NewOrderStatus instantiates a new OrderStatus object
 This constructor will assign default values to properties that have it defined,
@@ -124,20 +124,20 @@ SetFaceValueId sets FaceValueId field to given value.
 
 ### GetFaceValue
 
-`func (o *OrderStatus) GetFaceValue() float32`
+`func (o *OrderStatus) GetFaceValue() decimal.Decimal`
 
 GetFaceValue returns the FaceValue field if non-nil, zero value otherwise.
 
 ### GetFaceValueOk
 
-`func (o *OrderStatus) GetFaceValueOk() (*float32, bool)`
+`func (o *OrderStatus) GetFaceValueOk() (*decimal.Decimal, bool)`
 
 GetFaceValueOk returns a tuple with the FaceValue field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetFaceValue
 
-`func (o *OrderStatus) SetFaceValue(v float32)`
+`func (o *OrderStatus) SetFaceValue(v decimal.Decimal)`
 
 SetFaceValue sets FaceValue field to given value.
 
@@ -234,20 +234,20 @@ HasCallbackUrl returns a boolean if a field has been set.
 
 ### GetCost
 
-`func (o *OrderStatus) GetCost() float32`
+`func (o *OrderStatus) GetCost() decimal.Decimal`
 
 GetCost returns the Cost field if non-nil, zero value otherwise.
 
 ### GetCostOk
 
-`func (o *OrderStatus) GetCostOk() (*float32, bool)`
+`func (o *OrderStatus) GetCostOk() (*decimal.Decimal, bool)`
 
 GetCostOk returns a tuple with the Cost field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetCost
 
-`func (o *OrderStatus) SetCost(v float32)`
+`func (o *OrderStatus) SetCost(v decimal.Decimal)`
 
 SetCost sets Cost field to given value.
 

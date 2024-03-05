@@ -426,7 +426,7 @@ Each of these functions takes a value of the given basic type and returns a poin
 * `PtrInt32`
 * `PtrInt64`
 * `PtrFloat`
-* `PtrFloat32`
+* `Ptrdecimal.Decimal`
 * `PtrFloat64`
 * `PtrString`
 * `PtrTime`

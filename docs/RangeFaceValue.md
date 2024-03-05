@@ -6,12 +6,12 @@ Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **ProductId** | **int32** | Product ID | 
 **FaceValueId** | **int32** | Face value ID | 
-**FaceValueFrom** | **float32** | Minimum face value | 
-**FaceValueTo** | **float32** | Maximum face value | 
-**FaceValueStep** | **float32** | Incremental step of the face value range | 
+**FaceValueFrom** | **decimal.Decimal** | Minimum face value | 
+**FaceValueTo** | **decimal.Decimal** | Maximum face value | 
+**FaceValueStep** | **decimal.Decimal** | Incremental step of the face value range | 
 **FaceValueCurrency** | **string** | Face value currency alphabetic ISO 4217 code | 
-**MinimumCost** | **float32** | Minimum face value cost. | 
-**MaximumCost** | **float32** | Maximum face value cost. | 
+**MinimumCost** | **decimal.Decimal** | Minimum face value cost. | 
+**MaximumCost** | **decimal.Decimal** | Maximum face value cost. | 
 **CostCurrency** | **string** | The cost currency alphabetic ISO 4217 code. This currency will always be the same as your CY.SEND account currency. | 
 **Promotion** | **bool** | True if there is a running promotion | 
 
@@ -19,7 +19,7 @@ Name | Type | Description | Notes
 
 ### NewRangeFaceValue
 
-`func NewRangeFaceValue(productId int32, faceValueId int32, faceValueFrom float32, faceValueTo float32, faceValueStep float32, faceValueCurrency string, minimumCost float32, maximumCost float32, costCurrency string, promotion bool, ) *RangeFaceValue`
+`func NewRangeFaceValue(productId int32, faceValueId int32, faceValueFrom decimal.Decimal, faceValueTo decimal.Decimal, faceValueStep decimal.Decimal, faceValueCurrency string, minimumCost decimal.Decimal, maximumCost decimal.Decimal, costCurrency string, promotion bool, ) *RangeFaceValue`
 
 NewRangeFaceValue instantiates a new RangeFaceValue object
 This constructor will assign default values to properties that have it defined,
@@ -76,60 +76,60 @@ SetFaceValueId sets FaceValueId field to given value.
 
 ### GetFaceValueFrom
 
-`func (o *RangeFaceValue) GetFaceValueFrom() float32`
+`func (o *RangeFaceValue) GetFaceValueFrom() decimal.Decimal`
 
 GetFaceValueFrom returns the FaceValueFrom field if non-nil, zero value otherwise.
 
 ### GetFaceValueFromOk
 
-`func (o *RangeFaceValue) GetFaceValueFromOk() (*float32, bool)`
+`func (o *RangeFaceValue) GetFaceValueFromOk() (*decimal.Decimal, bool)`
 
 GetFaceValueFromOk returns a tuple with the FaceValueFrom field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetFaceValueFrom
 
-`func (o *RangeFaceValue) SetFaceValueFrom(v float32)`
+`func (o *RangeFaceValue) SetFaceValueFrom(v decimal.Decimal)`
 
 SetFaceValueFrom sets FaceValueFrom field to given value.
 
 
 ### GetFaceValueTo
 
-`func (o *RangeFaceValue) GetFaceValueTo() float32`
+`func (o *RangeFaceValue) GetFaceValueTo() decimal.Decimal`
 
 GetFaceValueTo returns the FaceValueTo field if non-nil, zero value otherwise.
 
 ### GetFaceValueToOk
 
-`func (o *RangeFaceValue) GetFaceValueToOk() (*float32, bool)`
+`func (o *RangeFaceValue) GetFaceValueToOk() (*decimal.Decimal, bool)`
 
 GetFaceValueToOk returns a tuple with the FaceValueTo field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetFaceValueTo
 
-`func (o *RangeFaceValue) SetFaceValueTo(v float32)`
+`func (o *RangeFaceValue) SetFaceValueTo(v decimal.Decimal)`
 
 SetFaceValueTo sets FaceValueTo field to given value.
 
 
 ### GetFaceValueStep
 
-`func (o *RangeFaceValue) GetFaceValueStep() float32`
+`func (o *RangeFaceValue) GetFaceValueStep() decimal.Decimal`
 
 GetFaceValueStep returns the FaceValueStep field if non-nil, zero value otherwise.
 
 ### GetFaceValueStepOk
 
-`func (o *RangeFaceValue) GetFaceValueStepOk() (*float32, bool)`
+`func (o *RangeFaceValue) GetFaceValueStepOk() (*decimal.Decimal, bool)`
 
 GetFaceValueStepOk returns a tuple with the FaceValueStep field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetFaceValueStep
 
-`func (o *RangeFaceValue) SetFaceValueStep(v float32)`
+`func (o *RangeFaceValue) SetFaceValueStep(v decimal.Decimal)`
 
 SetFaceValueStep sets FaceValueStep field to given value.
 
@@ -156,40 +156,40 @@ SetFaceValueCurrency sets FaceValueCurrency field to given value.
 
 ### GetMinimumCost
 
-`func (o *RangeFaceValue) GetMinimumCost() float32`
+`func (o *RangeFaceValue) GetMinimumCost() decimal.Decimal`
 
 GetMinimumCost returns the MinimumCost field if non-nil, zero value otherwise.
 
 ### GetMinimumCostOk
 
-`func (o *RangeFaceValue) GetMinimumCostOk() (*float32, bool)`
+`func (o *RangeFaceValue) GetMinimumCostOk() (*decimal.Decimal, bool)`
 
 GetMinimumCostOk returns a tuple with the MinimumCost field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetMinimumCost
 
-`func (o *RangeFaceValue) SetMinimumCost(v float32)`
+`func (o *RangeFaceValue) SetMinimumCost(v decimal.Decimal)`
 
 SetMinimumCost sets MinimumCost field to given value.
 
 
 ### GetMaximumCost
 
-`func (o *RangeFaceValue) GetMaximumCost() float32`
+`func (o *RangeFaceValue) GetMaximumCost() decimal.Decimal`
 
 GetMaximumCost returns the MaximumCost field if non-nil, zero value otherwise.
 
 ### GetMaximumCostOk
 
-`func (o *RangeFaceValue) GetMaximumCostOk() (*float32, bool)`
+`func (o *RangeFaceValue) GetMaximumCostOk() (*decimal.Decimal, bool)`
 
 GetMaximumCostOk returns a tuple with the MaximumCost field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetMaximumCost
 
-`func (o *RangeFaceValue) SetMaximumCost(v float32)`
+`func (o *RangeFaceValue) SetMaximumCost(v decimal.Decimal)`
 
 SetMaximumCost sets MaximumCost field to given value.
 

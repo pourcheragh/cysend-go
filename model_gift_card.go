@@ -14,6 +14,8 @@ import (
 	"encoding/json"
 	"bytes"
 	"fmt"
+
+	"github.com/shopspring/decimal"
 )
 
 // checks if the GiftCard type satisfies the MappedNullable interface at compile time
@@ -32,11 +34,11 @@ type GiftCard struct {
 	// Flag to see if CY.SEND gift card is active or not
 	Active bool `json:"active"`
 	// CY.SEND gift card face value
-	FaceValue float32 `json:"face_value"`
+	FaceValue decimal.Decimal `json:"face_value"`
 	// CY.SEND gift card face-value currency alphabetic ISO 4217 code
 	Currency string `json:"currency"`
 	// CY.SEND gift card remaining balance
-	RemainingBalance float32 `json:"remaining_balance"`
+	RemainingBalance decimal.Decimal `json:"remaining_balance"`
 	// CY.SEND gift card expiry date and time in ISO8601 format
 	Expiration string `json:"expiration"`
 	// CY.SEND gift card usage information
@@ -49,7 +51,7 @@ type _GiftCard GiftCard
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewGiftCard(code string, serial string, name string, logo string, active bool, faceValue float32, currency string, remainingBalance float32, expiration string, usageInstruction string) *GiftCard {
+func NewGiftCard(code string, serial string, name string, logo string, active bool, faceValue decimal.Decimal, currency string, remainingBalance decimal.Decimal, expiration string, usageInstruction string) *GiftCard {
 	this := GiftCard{}
 	this.Code = code
 	this.Serial = serial
@@ -193,9 +195,9 @@ func (o *GiftCard) SetActive(v bool) {
 }
 
 // GetFaceValue returns the FaceValue field value
-func (o *GiftCard) GetFaceValue() float32 {
+func (o *GiftCard) GetFaceValue() decimal.Decimal {
 	if o == nil {
-		var ret float32
+		var ret decimal.Decimal
 		return ret
 	}
 
@@ -204,7 +206,7 @@ func (o *GiftCard) GetFaceValue() float32 {
 
 // GetFaceValueOk returns a tuple with the FaceValue field value
 // and a boolean to check if the value has been set.
-func (o *GiftCard) GetFaceValueOk() (*float32, bool) {
+func (o *GiftCard) GetFaceValueOk() (*decimal.Decimal, bool) {
 	if o == nil {
 		return nil, false
 	}
@@ -212,7 +214,7 @@ func (o *GiftCard) GetFaceValueOk() (*float32, bool) {
 }
 
 // SetFaceValue sets field value
-func (o *GiftCard) SetFaceValue(v float32) {
+func (o *GiftCard) SetFaceValue(v decimal.Decimal) {
 	o.FaceValue = v
 }
 
@@ -241,9 +243,9 @@ func (o *GiftCard) SetCurrency(v string) {
 }
 
 // GetRemainingBalance returns the RemainingBalance field value
-func (o *GiftCard) GetRemainingBalance() float32 {
+func (o *GiftCard) GetRemainingBalance() decimal.Decimal {
 	if o == nil {
-		var ret float32
+		var ret decimal.Decimal
 		return ret
 	}
 
@@ -252,7 +254,7 @@ func (o *GiftCard) GetRemainingBalance() float32 {
 
 // GetRemainingBalanceOk returns a tuple with the RemainingBalance field value
 // and a boolean to check if the value has been set.
-func (o *GiftCard) GetRemainingBalanceOk() (*float32, bool) {
+func (o *GiftCard) GetRemainingBalanceOk() (*decimal.Decimal, bool) {
 	if o == nil {
 		return nil, false
 	}
@@ -260,7 +262,7 @@ func (o *GiftCard) GetRemainingBalanceOk() (*float32, bool) {
 }
 
 // SetRemainingBalance sets field value
-func (o *GiftCard) SetRemainingBalance(v float32) {
+func (o *GiftCard) SetRemainingBalance(v decimal.Decimal) {
 	o.RemainingBalance = v
 }
 

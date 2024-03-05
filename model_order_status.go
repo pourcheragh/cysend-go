@@ -14,6 +14,8 @@ import (
 	"encoding/json"
 	"bytes"
 	"fmt"
+
+	"github.com/shopspring/decimal"
 )
 
 // checks if the OrderStatus type satisfies the MappedNullable interface at compile time
@@ -30,7 +32,7 @@ type OrderStatus struct {
 	// Face value ID
 	FaceValueId int32 `json:"face_value_id"`
 	// Face value
-	FaceValue float32 `json:"face_value"`
+	FaceValue decimal.Decimal `json:"face_value"`
 	// Face value currency alphabetic ISO 4217 code
 	FaceValueCurrency string `json:"face_value_currency"`
 	GiftCardCode *string `json:"gift_card_code,omitempty"`
@@ -38,7 +40,7 @@ type OrderStatus struct {
 	// CUSTOMER callback URL were order status will be send
 	CallbackUrl *string `json:"callback_url,omitempty"`
 	// Order cost
-	Cost float32 `json:"cost"`
+	Cost decimal.Decimal `json:"cost"`
 	// Order currency alphabetic ISO 4217 code
 	Currency string `json:"currency"`
 	// List of beneficiary information
@@ -62,7 +64,7 @@ type _OrderStatus OrderStatus
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewOrderStatus(uid string, userUid string, date string, faceValueId int32, faceValue float32, faceValueCurrency string, scenario OrderScenario, cost float32, currency string, beneficiaryInformation []BeneficiaryInformation, status string, responseCode string, responseTitle string, responseDescription string) *OrderStatus {
+func NewOrderStatus(uid string, userUid string, date string, faceValueId int32, faceValue decimal.Decimal, faceValueCurrency string, scenario OrderScenario, cost decimal.Decimal, currency string, beneficiaryInformation []BeneficiaryInformation, status string, responseCode string, responseTitle string, responseDescription string) *OrderStatus {
 	this := OrderStatus{}
 	this.Uid = uid
 	this.UserUid = userUid
@@ -188,9 +190,9 @@ func (o *OrderStatus) SetFaceValueId(v int32) {
 }
 
 // GetFaceValue returns the FaceValue field value
-func (o *OrderStatus) GetFaceValue() float32 {
+func (o *OrderStatus) GetFaceValue() decimal.Decimal {
 	if o == nil {
-		var ret float32
+		var ret decimal.Decimal
 		return ret
 	}
 
@@ -199,7 +201,7 @@ func (o *OrderStatus) GetFaceValue() float32 {
 
 // GetFaceValueOk returns a tuple with the FaceValue field value
 // and a boolean to check if the value has been set.
-func (o *OrderStatus) GetFaceValueOk() (*float32, bool) {
+func (o *OrderStatus) GetFaceValueOk() (*decimal.Decimal, bool) {
 	if o == nil {
 		return nil, false
 	}
@@ -207,7 +209,7 @@ func (o *OrderStatus) GetFaceValueOk() (*float32, bool) {
 }
 
 // SetFaceValue sets field value
-func (o *OrderStatus) SetFaceValue(v float32) {
+func (o *OrderStatus) SetFaceValue(v decimal.Decimal) {
 	o.FaceValue = v
 }
 
@@ -324,9 +326,9 @@ func (o *OrderStatus) SetCallbackUrl(v string) {
 }
 
 // GetCost returns the Cost field value
-func (o *OrderStatus) GetCost() float32 {
+func (o *OrderStatus) GetCost() decimal.Decimal {
 	if o == nil {
-		var ret float32
+		var ret decimal.Decimal
 		return ret
 	}
 
@@ -335,7 +337,7 @@ func (o *OrderStatus) GetCost() float32 {
 
 // GetCostOk returns a tuple with the Cost field value
 // and a boolean to check if the value has been set.
-func (o *OrderStatus) GetCostOk() (*float32, bool) {
+func (o *OrderStatus) GetCostOk() (*decimal.Decimal, bool) {
 	if o == nil {
 		return nil, false
 	}
@@ -343,7 +345,7 @@ func (o *OrderStatus) GetCostOk() (*float32, bool) {
 }
 
 // SetCost sets field value
-func (o *OrderStatus) SetCost(v float32) {
+func (o *OrderStatus) SetCost(v decimal.Decimal) {
 	o.Cost = v
 }
 

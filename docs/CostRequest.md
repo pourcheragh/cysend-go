@@ -5,7 +5,7 @@
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **FaceValueId** | **int32** | Face value ID | 
-**FaceValue** | **float32** | Face value | 
+**FaceValue** | **decimal.Decimal** | Face value | 
 **FaceValueCurrency** | **string** | Face value currency alphabetic ISO 4217 code | 
 **GiftCardCode** | Pointer to **string** |  | [optional] 
 **BeneficiaryInformation** | [**[]BeneficiaryInformation**](BeneficiaryInformation.md) | List of beneficiary information | 
@@ -14,7 +14,7 @@ Name | Type | Description | Notes
 
 ### NewCostRequest
 
-`func NewCostRequest(faceValueId int32, faceValue float32, faceValueCurrency string, beneficiaryInformation []BeneficiaryInformation, ) *CostRequest`
+`func NewCostRequest(faceValueId int32, faceValue decimal.Decimal, faceValueCurrency string, beneficiaryInformation []BeneficiaryInformation, ) *CostRequest`
 
 NewCostRequest instantiates a new CostRequest object
 This constructor will assign default values to properties that have it defined,
@@ -51,20 +51,20 @@ SetFaceValueId sets FaceValueId field to given value.
 
 ### GetFaceValue
 
-`func (o *CostRequest) GetFaceValue() float32`
+`func (o *CostRequest) GetFaceValue() decimal.Decimal`
 
 GetFaceValue returns the FaceValue field if non-nil, zero value otherwise.
 
 ### GetFaceValueOk
 
-`func (o *CostRequest) GetFaceValueOk() (*float32, bool)`
+`func (o *CostRequest) GetFaceValueOk() (*decimal.Decimal, bool)`
 
 GetFaceValueOk returns a tuple with the FaceValue field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetFaceValue
 
-`func (o *CostRequest) SetFaceValue(v float32)`
+`func (o *CostRequest) SetFaceValue(v decimal.Decimal)`
 
 SetFaceValue sets FaceValue field to given value.
 

@@ -14,6 +14,8 @@ import (
 	"encoding/json"
 	"bytes"
 	"fmt"
+
+	"github.com/shopspring/decimal"
 )
 
 // checks if the RangeFaceValue type satisfies the MappedNullable interface at compile time
@@ -26,17 +28,17 @@ type RangeFaceValue struct {
 	// Face value ID
 	FaceValueId int32 `json:"face_value_id"`
 	// Minimum face value
-	FaceValueFrom float32 `json:"face_value_from"`
+	FaceValueFrom decimal.Decimal `json:"face_value_from"`
 	// Maximum face value
-	FaceValueTo float32 `json:"face_value_to"`
+	FaceValueTo decimal.Decimal `json:"face_value_to"`
 	// Incremental step of the face value range
-	FaceValueStep float32 `json:"face_value_step"`
+	FaceValueStep decimal.Decimal `json:"face_value_step"`
 	// Face value currency alphabetic ISO 4217 code
 	FaceValueCurrency string `json:"face_value_currency"`
 	// Minimum face value cost.
-	MinimumCost float32 `json:"minimum_cost"`
+	MinimumCost decimal.Decimal `json:"minimum_cost"`
 	// Maximum face value cost.
-	MaximumCost float32 `json:"maximum_cost"`
+	MaximumCost decimal.Decimal `json:"maximum_cost"`
 	// The cost currency alphabetic ISO 4217 code. This currency will always be the same as your CY.SEND account currency.
 	CostCurrency string `json:"cost_currency"`
 	// True if there is a running promotion
@@ -49,7 +51,7 @@ type _RangeFaceValue RangeFaceValue
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewRangeFaceValue(productId int32, faceValueId int32, faceValueFrom float32, faceValueTo float32, faceValueStep float32, faceValueCurrency string, minimumCost float32, maximumCost float32, costCurrency string, promotion bool) *RangeFaceValue {
+func NewRangeFaceValue(productId int32, faceValueId int32, faceValueFrom decimal.Decimal, faceValueTo decimal.Decimal, faceValueStep decimal.Decimal, faceValueCurrency string, minimumCost decimal.Decimal, maximumCost decimal.Decimal, costCurrency string, promotion bool) *RangeFaceValue {
 	this := RangeFaceValue{}
 	this.ProductId = productId
 	this.FaceValueId = faceValueId
@@ -121,9 +123,9 @@ func (o *RangeFaceValue) SetFaceValueId(v int32) {
 }
 
 // GetFaceValueFrom returns the FaceValueFrom field value
-func (o *RangeFaceValue) GetFaceValueFrom() float32 {
+func (o *RangeFaceValue) GetFaceValueFrom() decimal.Decimal {
 	if o == nil {
-		var ret float32
+		var ret decimal.Decimal
 		return ret
 	}
 
@@ -132,7 +134,7 @@ func (o *RangeFaceValue) GetFaceValueFrom() float32 {
 
 // GetFaceValueFromOk returns a tuple with the FaceValueFrom field value
 // and a boolean to check if the value has been set.
-func (o *RangeFaceValue) GetFaceValueFromOk() (*float32, bool) {
+func (o *RangeFaceValue) GetFaceValueFromOk() (*decimal.Decimal, bool) {
 	if o == nil {
 		return nil, false
 	}
@@ -140,14 +142,14 @@ func (o *RangeFaceValue) GetFaceValueFromOk() (*float32, bool) {
 }
 
 // SetFaceValueFrom sets field value
-func (o *RangeFaceValue) SetFaceValueFrom(v float32) {
+func (o *RangeFaceValue) SetFaceValueFrom(v decimal.Decimal) {
 	o.FaceValueFrom = v
 }
 
 // GetFaceValueTo returns the FaceValueTo field value
-func (o *RangeFaceValue) GetFaceValueTo() float32 {
+func (o *RangeFaceValue) GetFaceValueTo() decimal.Decimal {
 	if o == nil {
-		var ret float32
+		var ret decimal.Decimal
 		return ret
 	}
 
@@ -156,7 +158,7 @@ func (o *RangeFaceValue) GetFaceValueTo() float32 {
 
 // GetFaceValueToOk returns a tuple with the FaceValueTo field value
 // and a boolean to check if the value has been set.
-func (o *RangeFaceValue) GetFaceValueToOk() (*float32, bool) {
+func (o *RangeFaceValue) GetFaceValueToOk() (*decimal.Decimal, bool) {
 	if o == nil {
 		return nil, false
 	}
@@ -164,14 +166,14 @@ func (o *RangeFaceValue) GetFaceValueToOk() (*float32, bool) {
 }
 
 // SetFaceValueTo sets field value
-func (o *RangeFaceValue) SetFaceValueTo(v float32) {
+func (o *RangeFaceValue) SetFaceValueTo(v decimal.Decimal) {
 	o.FaceValueTo = v
 }
 
 // GetFaceValueStep returns the FaceValueStep field value
-func (o *RangeFaceValue) GetFaceValueStep() float32 {
+func (o *RangeFaceValue) GetFaceValueStep() decimal.Decimal {
 	if o == nil {
-		var ret float32
+		var ret decimal.Decimal
 		return ret
 	}
 
@@ -180,7 +182,7 @@ func (o *RangeFaceValue) GetFaceValueStep() float32 {
 
 // GetFaceValueStepOk returns a tuple with the FaceValueStep field value
 // and a boolean to check if the value has been set.
-func (o *RangeFaceValue) GetFaceValueStepOk() (*float32, bool) {
+func (o *RangeFaceValue) GetFaceValueStepOk() (*decimal.Decimal, bool) {
 	if o == nil {
 		return nil, false
 	}
@@ -188,7 +190,7 @@ func (o *RangeFaceValue) GetFaceValueStepOk() (*float32, bool) {
 }
 
 // SetFaceValueStep sets field value
-func (o *RangeFaceValue) SetFaceValueStep(v float32) {
+func (o *RangeFaceValue) SetFaceValueStep(v decimal.Decimal) {
 	o.FaceValueStep = v
 }
 
@@ -217,9 +219,9 @@ func (o *RangeFaceValue) SetFaceValueCurrency(v string) {
 }
 
 // GetMinimumCost returns the MinimumCost field value
-func (o *RangeFaceValue) GetMinimumCost() float32 {
+func (o *RangeFaceValue) GetMinimumCost() decimal.Decimal {
 	if o == nil {
-		var ret float32
+		var ret decimal.Decimal
 		return ret
 	}
 
@@ -228,7 +230,7 @@ func (o *RangeFaceValue) GetMinimumCost() float32 {
 
 // GetMinimumCostOk returns a tuple with the MinimumCost field value
 // and a boolean to check if the value has been set.
-func (o *RangeFaceValue) GetMinimumCostOk() (*float32, bool) {
+func (o *RangeFaceValue) GetMinimumCostOk() (*decimal.Decimal, bool) {
 	if o == nil {
 		return nil, false
 	}
@@ -236,14 +238,14 @@ func (o *RangeFaceValue) GetMinimumCostOk() (*float32, bool) {
 }
 
 // SetMinimumCost sets field value
-func (o *RangeFaceValue) SetMinimumCost(v float32) {
+func (o *RangeFaceValue) SetMinimumCost(v decimal.Decimal) {
 	o.MinimumCost = v
 }
 
 // GetMaximumCost returns the MaximumCost field value
-func (o *RangeFaceValue) GetMaximumCost() float32 {
+func (o *RangeFaceValue) GetMaximumCost() decimal.Decimal {
 	if o == nil {
-		var ret float32
+		var ret decimal.Decimal
 		return ret
 	}
 
@@ -252,7 +254,7 @@ func (o *RangeFaceValue) GetMaximumCost() float32 {
 
 // GetMaximumCostOk returns a tuple with the MaximumCost field value
 // and a boolean to check if the value has been set.
-func (o *RangeFaceValue) GetMaximumCostOk() (*float32, bool) {
+func (o *RangeFaceValue) GetMaximumCostOk() (*decimal.Decimal, bool) {
 	if o == nil {
 		return nil, false
 	}
@@ -260,7 +262,7 @@ func (o *RangeFaceValue) GetMaximumCostOk() (*float32, bool) {
 }
 
 // SetMaximumCost sets field value
-func (o *RangeFaceValue) SetMaximumCost(v float32) {
+func (o *RangeFaceValue) SetMaximumCost(v decimal.Decimal) {
 	o.MaximumCost = v
 }
 
